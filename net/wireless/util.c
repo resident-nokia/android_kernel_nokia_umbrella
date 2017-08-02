@@ -79,13 +79,13 @@ int ieee80211_channel_to_frequency(int chan, enum nl80211_band band)
 		else if (chan < 14)
 			return 2407 + chan * 5;
 		break;
-	case IEEE80211_BAND_5GHZ:
+	case NL80211_BAND_5GHZ:
 		if (chan >= 182 && chan <= 196)
 			return 4000 + chan * 5;
 		else
 			return 5000 + chan * 5;
 		break;
-	case IEEE80211_BAND_60GHZ:
+	case NL80211_BAND_60GHZ:
 		if (chan < 5)
 			return 56160 + chan * 2160;
 		break;
@@ -117,11 +117,11 @@ EXPORT_SYMBOL(ieee80211_frequency_to_channel);
 struct ieee80211_channel *__ieee80211_get_channel(struct wiphy *wiphy,
 						  int freq)
 {
-	enum ieee80211_band band;
+	enum nl80211_band band;
 	struct ieee80211_supported_band *sband;
 	int i;
 
-	for (band = 0; band < IEEE80211_NUM_BANDS; band++) {
+	for (band = 0; band < NUM_NL80211_BANDS; band++) {
 		sband = wiphy->bands[band];
 
 		if (!sband)
@@ -138,12 +138,12 @@ struct ieee80211_channel *__ieee80211_get_channel(struct wiphy *wiphy,
 EXPORT_SYMBOL(__ieee80211_get_channel);
 
 static void set_mandatory_flags_band(struct ieee80211_supported_band *sband,
-				     enum ieee80211_band band)
+				     enum nl80211_band band)
 {
 	int i, want;
 
 	switch (band) {
-	case IEEE80211_BAND_5GHZ:
+	case NL80211_BAND_5GHZ:
 		want = 3;
 		for (i = 0; i < sband->n_bitrates; i++) {
 			if (sband->bitrates[i].bitrate == 60 ||
@@ -186,12 +186,12 @@ static void set_mandatory_flags_band(struct ieee80211_supported_band *sband,
 		}
 		WARN_ON(want != 0 && want != 3 && want != 6);
 		break;
-	case IEEE80211_BAND_60GHZ:
+	case NL80211_BAND_60GHZ:
 		/* check for mandatory HT MCS 1..4 */
 		WARN_ON(!sband->ht_cap.ht_supported);
 		WARN_ON((sband->ht_cap.mcs.rx_mask[0] & 0x1e) != 0x1e);
 		break;
-	case IEEE80211_NUM_BANDS:
+	case NUM_NL80211_BANDS:
 		WARN_ON(1);
 		break;
 	}
@@ -199,9 +199,9 @@ static void set_mandatory_flags_band(struct ieee80211_supported_band *sband,
 
 void ieee80211_set_bitrate_flags(struct wiphy *wiphy)
 {
-	enum ieee80211_band band;
+	enum nl80211_band band;
 
-	for (band = 0; band < IEEE80211_NUM_BANDS; band++)
+	for (band = 0; band < NUM_NL80211_BANDS; band++)
 		if (wiphy->bands[band])
 			set_mandatory_flags_band(wiphy->bands[band], band);
 }
@@ -1330,13 +1330,13 @@ size_t ieee80211_ie_split(const u8 *ies, size_t ielen,
 EXPORT_SYMBOL(ieee80211_ie_split);
 
 bool ieee80211_operating_class_to_band(u8 operating_class,
-				       enum ieee80211_band *band)
+				       enum nl80211_band *band)
 {
 	switch (operating_class) {
 	case 112:
 	case 115 ... 127:
 	case 128 ... 130:
-		*band = IEEE80211_BAND_5GHZ;
+		*band = NL80211_BAND_5GHZ;
 		return true;
 	case 81:
 	case 82:
@@ -1345,7 +1345,7 @@ bool ieee80211_operating_class_to_band(u8 operating_class,
 		*band = NL80211_BAND_2GHZ;
 		return true;
 	case 180:
-		*band = IEEE80211_BAND_60GHZ;
+		*band = NL80211_BAND_60GHZ;
 		return true;
 	}
 
@@ -1818,10 +1818,10 @@ int ieee80211_get_ratemask(struct ieee80211_supported_band *sband,
 
 unsigned int ieee80211_get_num_supported_channels(struct wiphy *wiphy)
 {
-	enum ieee80211_band band;
+	enum nl80211_band band;
 	unsigned int n_channels = 0;
 
-	for (band = 0; band < IEEE80211_NUM_BANDS; band++)
+	for (band = 0; band < NUM_NL80211_BANDS; band++)
 		if (wiphy->bands[band])
 			n_channels += wiphy->bands[band]->n_channels;
 

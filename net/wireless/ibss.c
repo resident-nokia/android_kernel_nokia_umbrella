@@ -237,7 +237,7 @@ int cfg80211_ibss_wext_join(struct cfg80211_registered_device *rdev,
 			    struct wireless_dev *wdev)
 {
 	struct cfg80211_cached_keys *ck = NULL;
-	enum ieee80211_band band;
+	enum nl80211_band band;
 	int i, err;
 
 	ASSERT_WDEV_LOCK(wdev);
@@ -249,7 +249,7 @@ int cfg80211_ibss_wext_join(struct cfg80211_registered_device *rdev,
 	if (!wdev->wext.ibss.chandef.chan) {
 		struct ieee80211_channel *new_chan = NULL;
 
-		for (band = 0; band < IEEE80211_NUM_BANDS; band++) {
+		for (band = 0; band < NUM_NL80211_BANDS; band++) {
 			struct ieee80211_supported_band *sband;
 			struct ieee80211_channel *chan;
 

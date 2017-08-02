@@ -177,9 +177,9 @@ static inline bool in_compat_syscall(void) { return is_compat_task(); }
 #define HDD_NL80211_BAND_5GHZ   NL80211_BAND_5GHZ
 #define HDD_NUM_NL80211_BANDS   NUM_NL80211_BANDS
 #else
-#define HDD_NL80211_BAND_2GHZ   IEEE80211_BAND_2GHZ
-#define HDD_NL80211_BAND_5GHZ   IEEE80211_BAND_5GHZ
-#define HDD_NUM_NL80211_BANDS   ((enum nl80211_band)IEEE80211_NUM_BANDS)
+#define HDD_NL80211_BAND_2GHZ   NL80211_BAND_2GHZ
+#define HDD_NL80211_BAND_5GHZ   NL80211_BAND_5GHZ
+#define HDD_NUM_NL80211_BANDS   ((enum nl80211_band)NUM_NL80211_BANDS)
 #endif
 
 /** Length of the TX queue for the netdev */
