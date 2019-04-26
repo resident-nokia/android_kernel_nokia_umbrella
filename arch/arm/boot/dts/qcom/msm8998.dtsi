@@ -282,22 +282,6 @@
 		compatible = "simple-bus";
 	};
 
-	firmware: firmware {
-		android {
-			compatible = "android,firmware";
-			fstab {
-				compatible = "android,fstab";
-				vendor {
-					compatible = "android,vendor";
-					dev = "/dev/block/platform/soc/1da4000.ufshc/by-name/vendor";
-					type = "ext4";
-					mnt_flags = "ro,barrier=1,discard";
-					fsmgr_flags = "wait,slotselect,verify";
-					status = "ok";
-				};
-			};
-		};
-	};
 
 	reserved-memory {
 		#address-cells = <2>;
@@ -2910,7 +2894,7 @@
 
 		dload_type@18 {
 			compatible = "qcom,msm-imem-dload-type";
-			reg = <0x18 4>;
+			reg = <0x1C 4>;
 		};
 
 		restart_reason@65c {

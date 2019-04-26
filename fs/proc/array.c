@@ -148,13 +148,19 @@ static inline void task_state(struct seq_file *m, struct pid_namespace *ns,
 	int g;
 	struct task_struct *tracer;
 	const struct cred *cred;
-	pid_t ppid, tpid = 0, tgid, ngid;
+	pid_t ppid = 0, tpid = 0, tgid, ngid;
 	unsigned int max_fds = 0;
+        struct task_struct *leader = NULL;
 
 	rcu_read_lock();
-	ppid = pid_alive(p) ?
-		task_tgid_nr_ns(rcu_dereference(p->real_parent), ns) : 0;
-
+	if (pid_alive(p)) {
+		struct task_struct *tracer = ptrace_parent(p);
+		if (tracer)
+			tpid = task_pid_nr_ns(tracer, ns);
+		ppid = task_tgid_nr_ns(rcu_dereference(p->real_parent), ns);
+		leader = p->group_leader;
+	}
+	cred = get_task_cred(p);
 	tracer = ptrace_parent(p);
 	if (tracer)
 		tpid = task_pid_nr_ns(tracer, ns);
@@ -178,7 +184,8 @@ static inline void task_state(struct seq_file *m, struct pid_namespace *ns,
 		"Uid:\t%d\t%d\t%d\t%d\n"
 		"Gid:\t%d\t%d\t%d\t%d\n"
 		"Ngid:\t%d\n"
-		"FDSize:\t%d\nGroups:\t",
+		"FDSize:\t%d\n"
+		"Groups:\t",
 		get_task_state(p),
 		tgid, pid_nr_ns(pid, ns), ppid, tpid,
 		from_kuid_munged(user_ns, cred->uid),
@@ -189,7 +196,8 @@ static inline void task_state(struct seq_file *m, struct pid_namespace *ns,
 		from_kgid_munged(user_ns, cred->egid),
 		from_kgid_munged(user_ns, cred->sgid),
 		from_kgid_munged(user_ns, cred->fsgid),
-		ngid, max_fds);
+		task_numa_group_id(p),
+		max_fds);	
 
 	group_info = cred->group_info;
 	for (g = 0; g < group_info->ngroups; g++)
@@ -198,10 +206,12 @@ static inline void task_state(struct seq_file *m, struct pid_namespace *ns,
 	put_cred(cred);
 
 #ifdef CONFIG_PID_NS
-	seq_puts(m, "\nNStgid:");
-	for (g = ns->level; g <= pid->level; g++)
-		seq_printf(m, "\t%d",
-			task_tgid_nr_ns(p, pid->numbers[g].ns));
+	if (leader) {
+		seq_puts(m, "\nNStgid:");
+		for (g = ns->level; g <= pid->level; g++)
+			seq_printf(m, "\t%d",
+				task_pid_nr_ns(leader, pid->numbers[g].ns));
+	}
 	seq_puts(m, "\nNSpid:");
 	for (g = ns->level; g <= pid->level; g++)
 		seq_printf(m, "\t%d",

@@ -866,8 +866,11 @@ static int tsens_tz_get_temp(struct thermal_zone_device *thermal,
 		return -EINVAL;
 
 	rc = msm_tsens_get_temp(tm_sensor->sensor_client_id, temp);
-	if (rc)
+	if (rc) {
+		printk("BBox;%s:(%d)\n", __func__, tm_sensor->sensor_client_id);
+		printk("BBox::UEC;22::7\n");
 		return rc;
+	}
 
 	idx = tmdev->sensor_dbg_info[tm_sensor->sensor_hw_num].idx;
 	tmdev->sensor_dbg_info[tm_sensor->sensor_hw_num].temp[idx%10] = *temp;
@@ -1571,7 +1574,7 @@ debug_start:
 			loop++;
 			msleep(TSENS_DEBUG_CYCLE_MS);
 		}
-		BUG();
+//		BUG();
 	}
 
 re_schedule:

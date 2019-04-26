@@ -278,7 +278,11 @@ struct qpnp_hap_lra_ares_cfg {
 	u16				lra_res_cal_period;
 	u8				auto_res_mode;
 };
-
+#if defined(CONFIG_FIH_NB1) || defined(CONFIG_FIH_A1N)
+void fih_set_level(int value);
+u32 g_weak_voltage;
+u32 g_default_voltage;
+#endif
 /*
  *  qpnp_hap - Haptic data structure
  *  @ spmi - spmi device
@@ -430,6 +434,8 @@ static int qpnp_hap_read_reg(struct qpnp_hap *hap, u16 addr, u8 *val)
 	else
 		*val = (u8)tmp;
 
+        if(rc < 0) printk("BBox::UEC;19::7\n");
+
 	return rc;
 }
 
@@ -462,6 +468,9 @@ static int qpnp_hap_write_reg(struct qpnp_hap *hap, u16 addr, u8 val)
 	spin_unlock_irqrestore(&hap->bus_lock, flags);
 	if (!rc)
 		pr_debug("wrote: HAP_0x%x = 0x%x\n", addr, val);
+
+        if(rc < 0) printk("BBox::UEC;19::7\n");
+
 	return rc;
 }
 
@@ -648,9 +657,10 @@ static irqreturn_t qpnp_hap_sc_irq(int irq, void *_hap)
 
 	if (hap->sc_count < SC_MAX_COUNT) {
 		qpnp_hap_read_reg(hap, QPNP_HAP_STATUS(hap->base), &val);
-		if (val & SC_FOUND_BIT)
+		if (val & SC_FOUND_BIT){
 			schedule_delayed_work(&hap->sc_work,
 					QPNP_HAP_SC_IRQ_STATUS_DELAY);
+                }
 		else
 			hap->sc_count = 0;
 	} else {
@@ -661,6 +671,7 @@ static irqreturn_t qpnp_hap_sc_irq(int irq, void *_hap)
 		rc = qpnp_hap_write_reg(hap, QPNP_HAP_EN_CTL_REG(hap->base),
 			val);
 		pr_err("Haptics disabled permanently due to short circuit\n");
+                printk("BBox::UEC;19::11\n");
 	}
 
 	return IRQ_HANDLED;
@@ -1787,7 +1798,80 @@ static ssize_t qpnp_hap_vmax_store(struct device *dev,
 	hap->vmax_mv = data;
 	return count;
 }
+#if defined(CONFIG_FIH_NB1) || defined(CONFIG_FIH_A1N)
+static ssize_t qpnp_hap_level_store(struct device *dev,
+		struct device_attribute *attr, const char *buf, size_t count)
+{
+	struct timed_output_dev *timed_dev = dev_get_drvdata(dev);
+	struct qpnp_hap *hap = container_of(timed_dev, struct qpnp_hap,
+					 timed_dev);
 
+	int rc, data;
+
+	if (sscanf(buf, "%d", &data) != 1)
+		return -EINVAL;
+	else
+	{
+		if(data == 0) //weak voltage
+			hap->vmax_mv = g_weak_voltage;
+		else if(data == 1)
+			hap->vmax_mv = g_default_voltage;
+		else
+		{
+			hap->vmax_mv = data;
+			g_default_voltage = hap->vmax_mv;
+		}
+
+		dev_info(&hap->pdev->dev, "set haptics vmax = %d\n", hap->vmax_mv);
+	}
+	/* Configure the VMAX register */
+	rc = qpnp_hap_vmax_config(hap, hap->vmax_mv, false);
+	if (rc)
+		return rc;
+
+	return count;
+}
+
+/* sysfs show function for min max test data */
+static ssize_t qpnp_hap_level_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	struct timed_output_dev *timed_dev = dev_get_drvdata(dev);
+	struct qpnp_hap *hap = container_of(timed_dev, struct qpnp_hap,
+					 timed_dev);
+
+	int count = 0;
+	u8 val;
+
+	qpnp_hap_read_reg(hap, hap->base + 0x51, &val);
+	count += snprintf(buf + count, PAGE_SIZE,
+			"qpnp_haptics: REG_0x%x = 0x%x\n",
+			hap->base + 0x51,
+			val);
+
+	return count;
+}
+void fih_set_level(int value)
+{
+	struct qpnp_hap *hap = ghap;
+	int rc = 0, vmax = 0;
+
+	if(value == 9)
+#ifdef CONFIG_FIH_A1N
+		vmax = 3000;
+#else
+		vmax = QPNP_HAP_VMAX_MAX_MV;
+#endif
+	else
+		vmax = g_default_voltage;
+
+	if(hap->vmax_mv != vmax)
+	{
+		hap->vmax_mv = vmax;
+		rc = qpnp_hap_vmax_config(hap, hap->vmax_mv, false);
+	}
+}
+#endif
 /* sysfs attributes */
 static struct device_attribute qpnp_hap_attrs[] = {
 	__ATTR(wf_s0, 0664, qpnp_hap_wf_s0_show, qpnp_hap_wf_s0_store),
@@ -1819,6 +1903,9 @@ static struct device_attribute qpnp_hap_attrs[] = {
 		qpnp_hap_override_auto_mode_show,
 		qpnp_hap_override_auto_mode_store),
 	__ATTR(vmax_mv, 0664, qpnp_hap_vmax_show, qpnp_hap_vmax_store),
+#if defined(CONFIG_FIH_NB1) || defined(CONFIG_FIH_A1N)
+	__ATTR(level, 0664, qpnp_hap_level_show, qpnp_hap_level_store),
+#endif
 };
 
 static int calculate_lra_code(struct qpnp_hap *hap)
@@ -2358,9 +2445,11 @@ static void qpnp_hap_worker(struct work_struct *work)
 
 	if (hap->vcc_pon && hap->state && !hap->vcc_pon_enabled) {
 		rc = regulator_enable(hap->vcc_pon);
-		if (rc < 0)
+		if (rc < 0){
 			pr_err("could not enable vcc_pon regulator rc=%d\n",
 				rc);
+                        printk("BBox::UEC;19::8\n");
+                }
 		else
 			hap->vcc_pon_enabled = true;
 	}
@@ -2845,7 +2934,16 @@ static int qpnp_hap_parse_dt(struct qpnp_hap *hap)
 		pr_err("Unable to read vmax\n");
 		return rc;
 	}
-
+#if defined(CONFIG_FIH_NB1) || defined(CONFIG_FIH_A1N)
+	g_default_voltage = hap->vmax_mv;
+	rc = of_property_read_u32(pdev->dev.of_node, "qcom,weak-vmax-mv", &temp);
+	if (!rc) {
+		g_weak_voltage = temp;
+	} else if (rc != -EINVAL) {
+		g_weak_voltage = hap->vmax_mv;
+		dev_err(&pdev->dev, "OK to ignore weak-vmax-mv\n");
+	}
+#endif
 	hap->ilim_ma = QPNP_HAP_ILIM_MIN_MV;
 	rc = of_property_read_u32(pdev->dev.of_node, "qcom,ilim-ma", &temp);
 	if (!rc) {

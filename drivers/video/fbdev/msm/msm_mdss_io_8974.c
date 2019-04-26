@@ -2658,6 +2658,7 @@ int mdss_dsi_post_clkoff_cb(void *priv,
 				ctrl->core_power = false;
 			}
 		}
+
 	}
 	return rc;
 }

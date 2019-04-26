@@ -504,6 +504,12 @@ static void msm_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
 	unsigned i;
 
 	for (i = 0; i < chip->ngpio; i++, gpio++) {
+#if defined(CONFIG_FIH_NB1) || defined(CONFIG_FIH_A1N)
+	//GPIO 81, 82, 83, 84 own by other subsystem, must skip
+		if (i==81 || i==82 || i==83 || i==84) {
+			continue;
+		}
+#endif
 		msm_gpio_dbg_show_one(s, NULL, chip, i, gpio);
 		seq_puts(s, "\n");
 	}

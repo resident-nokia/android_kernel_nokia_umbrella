@@ -98,6 +98,11 @@ config LEDS_LM3642
 	  converter plus 1.5A constant current driver for a high-current
 	  white LED.
 
+config LEDS_LM2755
+	tristate "LED support for LM2755 Chip"
+	depends on LEDS_CLASS && I2C
+	help
+	  This option enables support for LEDs connected to LM2755.
 
 config LEDS_LOCOMO
 	tristate "LED Support for Locomo device"
@@ -641,6 +646,20 @@ config LEDS_VERSATILE
 	help
 	  This option enabled support for the LEDs on the ARM Versatile
 	  and RealView boards. Say Y to enabled these.
+
+config LEDS_FIH_SOFT_KEY
+	bool "FIH LED SOFT_KEY"
+	select LEDS_TRIGGERS
+	default n
+	help
+	  This option enables FIH LED SOFT_KEY
+
+config CHECK_FTM
+	bool "CHECK FTM"
+	depends on LEDS_QPNP
+	default n
+	help
+	  This option removes some code when enter FTM image
 
 comment "LED Triggers"
 source "drivers/leds/trigger/Kconfig"

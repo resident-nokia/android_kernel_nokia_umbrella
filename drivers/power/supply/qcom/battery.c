@@ -888,6 +888,7 @@ static int usb_icl_vote_callback(struct votable *votable, void *data,
 	if (rerun_aicl) {
 		/* set a lower ICL */
 		pval.intval = max(pval.intval - ICL_STEP_UA, ICL_STEP_UA);
+
 		power_supply_set_property(chip->main_psy,
 				POWER_SUPPLY_PROP_CURRENT_MAX,
 				&pval);
@@ -1353,7 +1354,7 @@ int qcom_batt_init(void)
 		goto release_wakeup_source;
 	}
 
-	chip->fv_votable = create_votable("FV", VOTE_MAX,
+	chip->fv_votable = create_votable("FV", VOTE_MIN,
 					pl_fv_vote_callback,
 					chip);
 	if (IS_ERR(chip->fv_votable)) {

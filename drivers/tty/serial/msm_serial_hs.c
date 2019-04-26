@@ -359,6 +359,10 @@ static int msm_hs_clk_bus_vote(struct msm_hs_port *msm_uport)
 			dev_err(msm_uport->uport.dev,
 				"%s: Could not turn on pclk [%d]\n",
 				__func__, rc);
+#ifdef BBOX_ENABLE
+			printk("BBox; %s LINE=%d rc=%d\n", __func__, __LINE__, rc);
+			printk("BBox::UEC;14::1\n");
+#endif
 			goto busreset;
 		}
 	}
@@ -367,6 +371,10 @@ static int msm_hs_clk_bus_vote(struct msm_hs_port *msm_uport)
 		dev_err(msm_uport->uport.dev,
 			"%s: Could not turn on core clk [%d]\n",
 			__func__, rc);
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d rc=%d\n", __func__, __LINE__, rc);
+		printk("BBox::UEC;14::1\n");
+#endif
 		goto core_unprepare;
 	}
 	MSM_HS_DBG("%s: Clock ON successful\n", __func__);
@@ -402,6 +410,10 @@ static void msm_hs_resource_unvote(struct msm_hs_port *msm_uport)
 	if (rc <= 0) {
 		MSM_HS_WARN("%s(): rc zero, bailing\n", __func__);
 		WARN_ON(1);
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d rc=%d\n", __func__, __LINE__, rc);
+		printk("BBox::UEC; 14::1\n");
+#endif
 		return;
 	}
 	atomic_dec(&msm_uport->resource_count);
@@ -572,12 +584,20 @@ static int sps_rx_disconnect(struct sps_pipe *sps_pipe_handler)
 	ret = sps_get_config(sps_pipe_handler, &config);
 	if (ret) {
 		pr_err("%s: sps_get_config() failed ret %d\n", __func__, ret);
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d ret=%d\n", __func__, __LINE__, ret);
+		printk("BBox::UEC;14::3\n");
+#endif
 		return ret;
 	}
 	config.options |= SPS_O_POLL;
 	ret = sps_set_config(sps_pipe_handler, &config);
 	if (ret) {
 		pr_err("%s: sps_set_config() failed ret %d\n", __func__, ret);
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d ret=%d\n", __func__, __LINE__, ret);
+		printk("BBox::UEC;14::3\n");
+#endif
 		return ret;
 	}
 	return sps_disconnect(sps_pipe_handler);
@@ -2556,6 +2576,10 @@ static int msm_hs_config_uart_gpios(struct uart_port *uport)
 			if (unlikely(ret)) {
 				MSM_HS_ERR("gpio request failed for:%d\n",
 					pdata->uart_tx_gpio);
+#ifdef BBOX_ENABLE
+				printk("BBox; %s LINE=%d ret=%d\n", __func__, __LINE__, ret);
+				printk("BBox::UEC;14::1\n");
+#endif
 				goto exit_uart_config;
 			}
 		}
@@ -2566,6 +2590,10 @@ static int msm_hs_config_uart_gpios(struct uart_port *uport)
 			if (unlikely(ret)) {
 				MSM_HS_ERR("gpio request failed for:%d\n",
 					pdata->uart_rx_gpio);
+#ifdef BBOX_ENABLE
+				printk("BBox; %s LINE=%d ret=%d\n", __func__, __LINE__, ret);
+				printk("BBox::UEC;14::1\n");
+#endif
 				goto uart_tx_unconfig;
 			}
 		}
@@ -2576,6 +2604,10 @@ static int msm_hs_config_uart_gpios(struct uart_port *uport)
 			if (unlikely(ret)) {
 				MSM_HS_ERR("gpio request failed for:%d\n",
 					pdata->uart_cts_gpio);
+#ifdef BBOX_ENABLE
+				printk("BBox; %s LINE=%d ret=%d\n", __func__, __LINE__, ret);
+				printk("BBox::UEC;14::1\n");
+#endif
 				goto uart_rx_unconfig;
 			}
 		}
@@ -2586,11 +2618,19 @@ static int msm_hs_config_uart_gpios(struct uart_port *uport)
 			if (unlikely(ret)) {
 				MSM_HS_ERR("gpio request failed for:%d\n",
 					pdata->uart_rfr_gpio);
+#ifdef BBOX_ENABLE
+				printk("BBox; %s LINE=%d ret=%d\n", __func__, __LINE__, ret);
+				printk("BBox::UEC;14::1\n");
+#endif
 				goto uart_cts_unconfig;
 			}
 		}
 	} else {
 		MSM_HS_ERR("Pdata is NULL.\n");
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d ret=-EINVAL\n", __func__, __LINE__);
+		printk("BBox::UEC;14::1\n");
+#endif
 		ret = -EINVAL;
 	}
 	return ret;
@@ -3135,6 +3175,10 @@ static int msm_hs_sps_init(struct msm_hs_port *msm_uport)
 		if (rc) {
 			MSM_HS_ERR("%s: BAM device register failed\n",
 				  __func__);
+#ifdef BBOX_ENABLE
+			printk("BBox; %s LINE=%d rc=%d\n", __func__, __LINE__, rc);
+			printk("BBox::UEC;14::3\n");
+#endif
 			return rc;
 		}
 		MSM_HS_DBG("%s:BAM device registered. bam_handle=0x%lx",
@@ -3146,6 +3190,10 @@ static int msm_hs_sps_init(struct msm_hs_port *msm_uport)
 				UART_SPS_PROD_PERIPHERAL);
 	if (rc) {
 		MSM_HS_ERR("%s: Failed to Init Producer BAM-pipe", __func__);
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d rc=%d\n", __func__, __LINE__, rc);
+		printk("BBox::UEC;14::3\n");
+#endif
 		goto deregister_bam;
 	}
 
@@ -3153,6 +3201,10 @@ static int msm_hs_sps_init(struct msm_hs_port *msm_uport)
 				UART_SPS_CONS_PERIPHERAL);
 	if (rc) {
 		MSM_HS_ERR("%s: Failed to Init Consumer BAM-pipe", __func__);
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d rc=%d\n", __func__, __LINE__, rc);
+		printk("BBox::UEC;14::3\n");
+#endif
 		goto deinit_ep_conn_prod;
 	}
 	return 0;
@@ -3458,6 +3510,10 @@ static int msm_hs_probe(struct platform_device *pdev)
 			GFP_KERNEL);
 	if (!msm_uport) {
 		dev_err(&pdev->dev, "Memory allocation failed\n");
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d ret=-ENOMEM\n", __func__, __LINE__);
+		printk("BBox::UEC;14::3\n");
+#endif
 		return -ENOMEM;
 	}
 
@@ -3474,24 +3530,40 @@ static int msm_hs_probe(struct platform_device *pdev)
 				IORESOURCE_MEM, "core_mem");
 	if (!core_resource) {
 		dev_err(&pdev->dev, "Invalid core HSUART Resources.\n");
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d ret=-ENXIO\n", __func__, __LINE__);
+		printk("BBox::UEC;14::3\n");
+#endif
 		return -ENXIO;
 	}
 	bam_resource = platform_get_resource_byname(pdev,
 				IORESOURCE_MEM, "bam_mem");
 	if (!bam_resource) {
 		dev_err(&pdev->dev, "Invalid BAM HSUART Resources.\n");
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d ret=-ENXIO\n", __func__, __LINE__);
+		printk("BBox::UEC;14::3\n");
+#endif
 		return -ENXIO;
 	}
 	core_irqres = platform_get_irq_byname(pdev, "core_irq");
 	if (core_irqres < 0) {
 		dev_err(&pdev->dev, "Error %d, invalid core irq resources.\n",
 			core_irqres);
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d ret=-ENXIO\n", __func__, __LINE__);
+		printk("BBox::UEC;14::3\n");
+#endif
 		return -ENXIO;
 	}
 	bam_irqres = platform_get_irq_byname(pdev, "bam_irq");
 	if (bam_irqres < 0) {
 		dev_err(&pdev->dev, "Error %d, invalid bam irq resources.\n",
 			bam_irqres);
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d ret=-ENXIO\n", __func__, __LINE__);
+		printk("BBox::UEC;14::3\n");
+#endif
 		return -ENXIO;
 	}
 	wakeup_irqres = platform_get_irq_byname(pdev, "wakeup_irq");
@@ -3506,6 +3578,10 @@ static int msm_hs_probe(struct platform_device *pdev)
 				resource_size(core_resource));
 	if (unlikely(!uport->membase)) {
 		dev_err(&pdev->dev, "UART Resource ioremap Failed.\n");
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d ret=-ENOMEM\n", __func__, __LINE__);
+		printk("BBox::UEC;14::3\n");
+#endif
 		return -ENOMEM;
 	}
 	msm_uport->bam_mem = bam_resource->start;
@@ -3513,6 +3589,10 @@ static int msm_hs_probe(struct platform_device *pdev)
 				resource_size(bam_resource));
 	if (unlikely(!msm_uport->bam_base)) {
 		dev_err(&pdev->dev, "UART BAM Resource ioremap Failed.\n");
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d ret=-ENOMEM\n", __func__, __LINE__);
+		printk("BBox::UEC;14::3\n");
+#endif
 		iounmap(uport->membase);
 		return -ENOMEM;
 	}
@@ -3541,6 +3621,10 @@ static int msm_hs_probe(struct platform_device *pdev)
 	msm_uport->bus_scale_table = msm_bus_cl_get_pdata(pdev);
 	if (!msm_uport->bus_scale_table) {
 		MSM_HS_ERR("BLSP UART: Bus scaling is disabled.\n");
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d\n", __func__, __LINE__);
+		printk("BBox::UEC;14::3\n");
+#endif
 	} else {
 		msm_uport->bus_perf_client =
 			msm_bus_scale_register_client
@@ -3548,6 +3632,10 @@ static int msm_hs_probe(struct platform_device *pdev)
 		if (IS_ERR(&msm_uport->bus_perf_client)) {
 			MSM_HS_ERR("%s():Bus client register failed\n",
 				   __func__);
+#ifdef BBOX_ENABLE
+			printk("BBox; %s LINE=%d ret=-EINVAL\n", __func__, __LINE__);
+			printk("BBox::UEC;14::3\n");
+#endif
 			ret = -EINVAL;
 			goto unmap_memory;
 		}
@@ -3591,6 +3679,10 @@ static int msm_hs_probe(struct platform_device *pdev)
 	if (!msm_uport->hsuart_wq) {
 		MSM_HS_ERR("%s(): Unable to create workqueue hsuart_wq\n",
 								__func__);
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d ret=-ENOMEM\n", __func__, __LINE__);
+		printk("BBox::UEC;14::3\n");
+#endif
 		ret =  -ENOMEM;
 		goto put_clk;
 	}
@@ -3668,6 +3760,10 @@ static int msm_hs_probe(struct platform_device *pdev)
 	ret = sysfs_create_file(&pdev->dev.kobj, &dev_attr_clock.attr);
 	if (unlikely(ret)) {
 		MSM_HS_ERR("Probe Failed as sysfs failed\n");
+#ifdef BBOX_ENABLE
+		printk("BBox; %s LINE=%d ret=%d\n", __func__, __LINE__, ret);
+		printk("BBox::UEC;14::3\n");
+#endif
 		goto err_clock;
 	}
 
