@@ -1,0 +1,6 @@
+&usb3 {
+	/* FIH - akckwang - NB1-674 - Set gpio 21,42 to output high for usb redriver */
+	fih,redriver-en = <&tlmm 42 0>;
+	fih,redriver-vdd = <&tlmm 21 0>;
+	/* end FIH - NB1-674 */
+};
