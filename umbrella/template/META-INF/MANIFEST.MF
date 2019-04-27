@@ -1,0 +1,57 @@
+Manifest-Version: 1.0
+Created-By: 1.0 (Android SignApk)
+
+Name: META-INF/com/google/android/updater-script
+SHA1-Digest: surH1Bs4hR30JclyYkFBB7d7164=
+
+Name: anykernel.sh
+SHA1-Digest: UYMq49E6KMlmkXpFllw0ypeN7k0=
+
+Name: ramdisk/WCNSS_qcom_cfg.ini
+SHA1-Digest: RJaX502UTKYi7BcONgigkvOWXe4=
+
+Name: META-INF/com/google/android/update-binary
+SHA1-Digest: giDJio9d1cYRfyCmNio2C8Hw7ek=
+
+Name: kernels/custom/Image.gz-dtb
+SHA1-Digest: gzBcM8J75km1Cn+laQlSMQ2LeIM=
+
+Name: tools/busybox
+SHA1-Digest: HFtMehbvTNzd542tkfgl9Z1Rt9M=
+
+Name: banner
+SHA1-Digest: eX1rUlN3WAnkL13+L5o4g/SVHcE=
+
+Name: version
+SHA1-Digest: vvlNr2t24lXgmw84aY3pOORVJOs=
+
+Name: kernels/oos/Image.gz-dtb
+SHA1-Digest: TR/L/7hyT97+EuAvfIMhnqYbNsk=
+
+Name: tools/magiskpolicy
+SHA1-Digest: VfluDLbsqQj/2pC0CXutWtkthRE=
+
+Name: tools/mkbootimg
+SHA1-Digest: TBUOJEBEmd4z0HASmwPi6jO3Hkc=
+
+Name: tools/unpackbootimg
+SHA1-Digest: +TC2YlSlRbE+pRiI67d9dLR3m4c=
+
+Name: ramdisk/modules/wlan.ko
+SHA1-Digest: UoumnyARF2jyWUYWOI5rjiXb7GQ=
+
+Name: tools/ak2-core.sh
+SHA1-Digest: htsf+w3cTEHe1Z5arPvwEDD/b/Q=
+
+Name: patch/modules
+SHA1-Digest: d2UgFp4f5TDCEt9vvuud41diED0=
+
+Name: ramdisk/init.flash.rc
+SHA1-Digest: N619xK+i/0fa2SKXRk3cUIsQfWw=
+
+Name: tools/xz
+SHA1-Digest: Mw5WTMhdFqftdgcSzLLkUkyVlug=
+
+Name: tools/lz4
+SHA1-Digest: 4d5gW9huHPg198uUA+YOIWCcC+0=
+
