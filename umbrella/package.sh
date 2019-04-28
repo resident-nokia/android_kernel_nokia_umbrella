@@ -1,9 +1,5 @@
 #!/bin/sh
 
-# If you plan to release a kernel based on umbrella
-# change the name here so it is reflected in the output
-_NAME="Umbrella"
-
 # Test for a compiled kernel
 if [ ! -f out/arch/arm64/boot/Image.*-dtb ]; then
     echo "Please compile a kernel before attempting to package it!"
@@ -11,7 +7,7 @@ if [ ! -f out/arch/arm64/boot/Image.*-dtb ]; then
 fi
 
 # Try to autodetect the device the kernel was built for if it wasn't specified
-KVERSION=$(make -s kernelrelease)
+KVERSION=$(cat out/include/config/kernel.release)
 if [ "$KDEVICE" = "" ]; then
     if echo $KVERSION | grep -qi NB1; then
         KDEVICE="NB1"
@@ -38,7 +34,7 @@ cp out/arch/arm64/boot/Image.*-dtb umbrella/.tmp
 # Package the zip file
 mkdir -p umbrella/out
 cd umbrella/.tmp
-zip -r ../out/$KNAME-$KVERSION.zip .
+zip -r ../out/$KVERSION.zip .
 cd ../..
 
 # Clean up
