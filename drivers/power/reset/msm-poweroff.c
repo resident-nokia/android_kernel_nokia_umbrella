@@ -177,7 +177,7 @@ static bool get_dload_mode(void)
 	return dload_mode_enabled;
 }
 
-#if 0
+#ifndef CONFIG_FIH_DISABLE_REBOOT_EDL
 static void enable_emergency_dload_mode(void)
 {
 	int ret;
@@ -384,7 +384,7 @@ static void msm_restart_prepare(const char *cmd)
 			if (!ret)
 				__raw_writel(0x6f656d00 | (code & 0xff),
 					     restart_reason);
-#if 0
+#ifndef CONFIG_FIH_DISABLE_REBOOT_EDL
 		} else if (!strncmp(cmd, "edl", 3)) {
 			enable_emergency_dload_mode();
 #endif
