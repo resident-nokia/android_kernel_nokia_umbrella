@@ -23,6 +23,10 @@ export KBUILD_OUTPUT="$(pwd)/out"
 export KBUILD_BUILD_USER="user"
 export KBUILD_BUILD_HOST="build"
 
+# Create an alias for current commit hash and tag name
+alias umbrella-commit='git rev-parse --verify --short HEAD'
+alias umbrella-tag='git describe --exact-match --abbrev=0'
+
 # Nice output
 echo "Build Environment initialized:"
 echo "  ARCH: $ARCH"
@@ -35,4 +39,4 @@ echo "To configure the build for A1N, type"
 echo "  make a1n_defconfig"
 echo ""
 echo "To compile the configured kernel, type"
-echo "  make -j$(nproc --all) LOCALVERSION=-\$(git rev-parse --verify --short HEAD)"
+echo "  make -j$(nproc --all) LOCALVERSION=-\$(umbrella-commit)"
