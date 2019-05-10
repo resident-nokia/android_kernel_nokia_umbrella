@@ -17,7 +17,7 @@ if [ "$KDEVICE" = "" ]; then
     fi
 fi
 if [ "$KNAME" = "" ]; then
-    KNAME=$_NAME
+    KNAME="Umbrella"
 fi
 
 # Copy the template config
