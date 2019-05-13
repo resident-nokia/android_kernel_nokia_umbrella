@@ -12,6 +12,7 @@ static int fih_info_proc_open_project_show(struct seq_file *m, void *v)
 
 	switch (fih_hwid_fetch(FIH_HWID_PRJ)) {
 		case FIH_PRJ_A1N: strcpy(msg, "A1N"); break;
+		case FIH_PRJ_NB1: strcpy(msg, "NB1"); break;
 		default: strcpy(msg, "N/A"); break;
 	}
 	seq_printf(m, "%s\n", msg);
@@ -102,6 +103,12 @@ static int fih_info_proc_open_hwmodel_show(struct seq_file *m, void *v)
 				strcpy(msg, "A1C"); 
 			else
 				strcpy(msg, "A1N");
+			break;
+		case FIH_PRJ_NB1: 
+			if (fih_hwid_fetch(FIH_HWID_RF) == FIH_BAND_G_850_900_1800_1900_W_1_2_5_8_T_34_39_L_1_2_3_4_5_7_8_20_28_38_39_40_41)
+				strcpy(msg, "B1C"); 
+			else
+				strcpy(msg, "NB1");
 			break;
 		default: strcpy(msg, "N/A"); break;
 	}
