@@ -1240,7 +1240,7 @@ static int ep_create_wakeup_source(struct epitem *epi)
 
 	if (!epi->ep->ws) {
                 char wname[256];
-                snprintf(wname, sizeof(wname), "%s %d: %s eventpoll", current->comm, current->pid, ( epi->ffd.file->f_path.dentry->d_name.name) ? epi->ffd.file->f_path.dentry->d_name.name : "N/A");
+                snprintf(wname, sizeof(wname), "%s %d: %s eventpoll", current->comm, current->pid, ( epi->ffd.file->f_path.dentry->d_name.name) ? (char*)epi->ffd.file->f_path.dentry->d_name.name : "N/A");
                 epi->ep->ws = wakeup_source_register(wname);
 				dump_stack();
 		if (!epi->ep->ws)
