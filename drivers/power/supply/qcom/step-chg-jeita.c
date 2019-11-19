@@ -559,13 +559,13 @@ static void status_change_work(struct work_struct *work)
 	int reschedule_us;
 	int reschedule_jeita_work_us = 0;
 	int reschedule_step_work_us = 0;
+	int reschedule_wlc_work_us = 0;
 	union power_supply_propval pval = {0, };
 
 	if (!is_batt_available(chip)) {
 		__pm_relax(chip->step_chg_ws);
 		return;
 	}
-	int reschedule_wlc_work_us = 0;
 	/* end A1NO-799 */
 
 	/* skip jeita and step if not charging */

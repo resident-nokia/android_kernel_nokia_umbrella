@@ -83,12 +83,12 @@ int gf_parse_dts(struct gf_dev* gf_dev)
     gpio_direction_output(gf_dev->pwr_gpio, 1);
 #endif
 
-  //rerfer from FihtdcCode@AlanHZ, Add for key define by customer
-  rc = of_property_read_u32(gf_dev->spi->dev.of_node, "goodix,key-customer-define", &gf_dev->key_customer_define);
-	if (rc && (rc != -EINVAL))
-		gf_dev->key_customer_define = 0;
-  if(gf_dev->key_customer_define > 2)
-    gf_dev->key_customer_define = 0;
+    //rerfer from FihtdcCode@AlanHZ, Add for key define by customer
+    rc = of_property_read_u32(gf_dev->spi->dev.of_node, "goodix,key-customer-define", &gf_dev->key_customer_define);
+    if (rc && (rc != -EINVAL))
+        gf_dev->key_customer_define = 0;
+    if(gf_dev->key_customer_define > 2)
+        gf_dev->key_customer_define = 0;
 
     return 0;
 }

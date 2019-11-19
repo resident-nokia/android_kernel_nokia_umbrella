@@ -5128,6 +5128,11 @@ static int fg_parse_ki_coefficients(struct fg_chip *chip)
 	return 0;
 }
 
+#undef DEFAULT_BATT_TEMP_COOL
+#undef DEFAULT_BATT_TEMP_HOT
+#undef DEFAULT_ESR_TIGHT_LT_FLT_UPCT
+#undef DEFAULT_ESR_BROAD_LT_FLT_UPCT
+
 #define DEFAULT_CUTOFF_VOLT_MV		3200
 #define DEFAULT_EMPTY_VOLT_MV		2850
 #define DEFAULT_RECHARGE_VOLT_MV	4250

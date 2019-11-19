@@ -208,7 +208,7 @@ static int siw_hal_tc_driving(struct device *dev, int mode);
 
 
 #define TCI_FAIL_NUM 11
-static const char const *siw_hal_tci_debug_str[TCI_FAIL_NUM] = {
+static const char *siw_hal_tci_debug_str[TCI_FAIL_NUM] = {
 	"NONE",
 	"DISTANCE_INTER_TAP",
 	"DISTANCE_TOUCHSLOP",
@@ -223,7 +223,7 @@ static const char const *siw_hal_tci_debug_str[TCI_FAIL_NUM] = {
 };
 
 #define SWIPE_FAIL_NUM 7
-static const char const *siw_hal_swipe_debug_str[SWIPE_FAIL_NUM] = {
+static const char *siw_hal_swipe_debug_str[SWIPE_FAIL_NUM] = {
 	"ERROR",
 	"1FINGER_FAST_RELEASE",
 	"MULTI_FINGER",
