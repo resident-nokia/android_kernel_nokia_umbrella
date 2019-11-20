@@ -47,7 +47,7 @@
                 //panel_spec_mfts = "sic/lg4894/ph1/ph1_limit_mfts.txt";
                 //prd_in_file = "/system/etc/lg4946_test_spec.txt";
                 prd_in_file = "/vendor/etc/lg4946_test_spec.txt";
-                prd_out_file = "/data/misc/touch/lg4946_test_result";
+                prd_out_file = "/data/vendor/misc/touch/lg4946_test_result";
                 /* LCM_RTC_CLK */
                 qcom,RTC_CLK-gpios = <&pm8998_gpios 14 0>;
         };

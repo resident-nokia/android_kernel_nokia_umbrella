@@ -587,6 +587,7 @@ static int32_t msm_ois_control(struct msm_ois_ctrl_t *o_ctrl,
 				settings[i].reg_data);
 			}
 		}
+		/* MM-JF-Fix-QCT-OIS-read-RAM-dump-error-00+} */
 
 		kfree(settings);
 		if (rc < 0) {

@@ -17,6 +17,7 @@
 	qcom,fg-recharge-soc-thr = <99>;
 	qcom,hold-soc-while-full;
 	qcom,battery-thermal-coefficients = [A2 50 FF];
+	qcom,linearize-soc;
 };
 
 /* pmi8998 charger */

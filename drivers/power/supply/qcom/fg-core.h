@@ -478,6 +478,8 @@ struct fg_chip {
 	struct work_struct	esr_filter_work;
 	struct alarm		esr_filter_alarm;
 	ktime_t			last_delta_temp_time;
+	int			sys_pre_temp;
+	int			sys_ignore_temp_sts; // ignore temp
 };
 
 /* Debugfs data structures are below */

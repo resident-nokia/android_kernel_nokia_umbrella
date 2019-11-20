@@ -24,7 +24,7 @@
 		qcom,hw-settle-time = <2>;
 		qcom,fast-avg-setup = <0>;
 	};
-    
+
 	chan@50 {
 		label = "pa_therm1";
 		reg = <0x50>;
@@ -34,8 +34,8 @@
 		qcom,scale-function = <2>;
 		qcom,hw-settle-time = <2>;
 		qcom,fast-avg-setup = <0>;
-	};    
-/* KERNEL-EL-AddExternalTherm-00*} */    
+	};
+/* KERNEL-EL-AddExternalTherm-00*} */
 };
 
 &pm8998_adc_tm {
@@ -50,7 +50,7 @@
 		qcom,btm-channel-number = <0x80>;
 		qcom,thermal-node;
 	};
-    
+
 	chan@4f {
 		label = "pa_therm0";
 		reg = <0x4f>;
@@ -61,7 +61,7 @@
 		qcom,btm-channel-number = <0x88>;
 		qcom,thermal-node;
 	};
-    
+
 	chan@50 {
 		label = "pa_therm1";
 		reg = <0x50>;
@@ -72,7 +72,7 @@
 		qcom,btm-channel-number = <0x90>;
 		qcom,thermal-node;
 	};
-/* KERNEL-EL-AddExternalTherm-00*} */    
+/* KERNEL-EL-AddExternalTherm-00*} */
 };
 
 &soc {

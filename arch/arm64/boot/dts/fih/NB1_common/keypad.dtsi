@@ -31,17 +31,24 @@
 		qcom,power-on@800 {
 			qcom,s3-debounce = <128>;
 			qcom,pon_1 {
-				qcom,support-reset = <0>;
+				qcom,support-reset = <1>;
+				/* RESET TRIGGER TIME: S1 + S2 = 10756ms */
 				qcom,s1-timer = <10256>;
-				qcom,s2-timer = <2000>;
-				qcom,s2-type = <1>;
+				qcom,s2-timer = <500>;
+				/* RESET TYPE: SHUTDOWN(4) */
+				qcom,s2-type = <4>;
 			};
 			/* PON: RESIN */
 			qcom,pon_2 {
 				linux,code = <115>;
 			};
 			qcom,pon_3 {
-				qcom,s2-type = <4>;
+				qcom,support-reset = <0>;
+				/* RESET TRIGGER TIME: S1 + S2 = 8720ms */
+				qcom,s1-timer = <6720>;
+				qcom,s2-timer = <2000>;
+				/* RESET TYPE: WARM(1) */
+				qcom,s2-type = <1>;
 			};
 		};
 	};

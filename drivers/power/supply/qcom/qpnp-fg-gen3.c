@@ -4006,6 +4006,8 @@ end_work:
 
 /* PSY CALLBACKS STAY HERE */
 
+#define IGNORE_NUMBER	8
+#define IGNORE_DIFF	300
 static int fg_psy_get_property(struct power_supply *psy,
 				       enum power_supply_property psp,
 				       union power_supply_propval *pval)
@@ -4031,6 +4033,37 @@ static int fg_psy_get_property(struct power_supply *psy,
 		break;
 	case POWER_SUPPLY_PROP_TEMP:
 		rc = fg_get_battery_temp(chip, &pval->intval);
+		if(chip->sys_ignore_temp_sts == -1)
+		{
+			chip->sys_pre_temp = pval->intval;
+			chip->sys_ignore_temp_sts = 0;
+			if(rc == -EINVAL)
+				chip->sys_ignore_temp_sts = -1;
+		}
+		else
+		{
+			if((pval->intval <600) && (pval->intval > -200))
+			{
+				chip->sys_pre_temp = pval->intval;
+				chip->sys_ignore_temp_sts =0;
+			}
+			else
+			{
+				if(chip->sys_ignore_temp_sts < IGNORE_NUMBER)
+				{
+					if(abs(chip->sys_pre_temp - pval->intval) > IGNORE_DIFF)
+					{
+						pval->intval = chip->sys_pre_temp;
+						chip->sys_ignore_temp_sts = chip->sys_ignore_temp_sts + 1;
+					}
+					else
+					{
+						chip->sys_pre_temp = pval->intval;
+						chip->sys_ignore_temp_sts =0;
+					}
+				}
+			}
+		}
 		break;
 	case POWER_SUPPLY_PROP_COLD_TEMP:
 		rc = fg_get_jeita_threshold(chip, JEITA_COLD, &pval->intval);
@@ -5583,6 +5616,8 @@ static int fg_gen3_probe(struct platform_device *pdev)
 	chip->prev_charge_status = -EINVAL;
 	chip->ki_coeff_full_soc = -EINVAL;
 	chip->online_status = -EINVAL;
+	chip->sys_pre_temp = 250;
+	chip->sys_ignore_temp_sts = -1;
 	chip->regmap = dev_get_regmap(chip->dev->parent, NULL);
 	if (!chip->regmap) {
 		dev_err(chip->dev, "Parent regmap is unavailable\n");
