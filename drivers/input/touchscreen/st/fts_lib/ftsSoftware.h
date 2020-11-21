@@ -55,7 +55,7 @@ typedef unsigned int u32;
 #define FTS_CMD_SAVE_CX_TUNING				0xFC
 
 
-//Event ID 
+//Event ID
 #define EVENTID_NO_EVENT 					0x00
 #define EVENTID_ERROR_EVENT					0x0F
 #define EVENTID_CONTROL_READY   			0x10
@@ -107,7 +107,7 @@ typedef unsigned int u32;
 #define CRC_CONFIG				0x02
 #define CRC_CX_MEMORY				0x03
 
-// CONFIG ID INFO	
+// CONFIG ID INFO
 #define CONFIG_ID_ADDR						0x0001
 #define CONFIG_ID_BYTE						2
 
@@ -181,4 +181,3 @@ typedef unsigned int u32;
 #define ERROR_INFO_SIZE			20*4 // bytes
 #define ERROR_SIGNATURE			0xFA5005AF
 #define ERROR_SIGN_HEAD			0xA5
-
