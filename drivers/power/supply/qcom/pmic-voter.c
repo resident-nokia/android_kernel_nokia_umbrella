@@ -17,7 +17,6 @@
 #include <linux/printk.h>
 #include <linux/slab.h>
 #include <linux/string.h>
-
 #include <linux/pmic-voter.h>
 
 #define NUM_MAX_CLIENTS		16

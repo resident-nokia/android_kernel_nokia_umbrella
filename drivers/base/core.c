@@ -1173,6 +1173,7 @@ int device_add(struct device *dev)
 	error = dpm_sysfs_add(dev);
 	if (error)
 		goto DPMError;
+
 	device_pm_add(dev);
 
 	if (MAJOR(dev->devt)) {

@@ -69,6 +69,7 @@ static struct {
 	[MDSS_MDP_SSPP_DMA3]    = { .ext2 = { 20, 4, 0 } },
 };
 
+
 static void __mdss_mdp_mixer_write_cfg(struct mdss_mdp_mixer *mixer,
 		struct mdss_mdp_mixer_cfg *cfg);
 

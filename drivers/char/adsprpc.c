@@ -479,6 +479,10 @@ static int fastrpc_mmap_find(struct fastrpc_file *fl, int fd, uintptr_t va,
 			if (va >= map->va &&
 				va + len <= map->va + map->len &&
 				map->fd == fd) {
+				if (map->refs + 1 == INT_MAX) {
+					spin_unlock(&me->hlock);
+					return -ETOOMANYREFS;
+				}
 				map->refs++;
 				match = map;
 				break;
@@ -491,6 +495,10 @@ static int fastrpc_mmap_find(struct fastrpc_file *fl, int fd, uintptr_t va,
 			if (va >= map->va &&
 				va + len <= map->va + map->len &&
 				map->fd == fd) {
+				if (map->refs + 1 == INT_MAX) {
+					spin_unlock(&fl->hlock);
+					return -ETOOMANYREFS;
+				}
 				map->refs++;
 				match = map;
 				break;
@@ -2550,7 +2558,7 @@ static int fastrpc_device_release(struct inode *inode, struct file *file)
 	if (fl) {
 		if (fl->debugfs_file != NULL)
 			debugfs_remove(fl->debugfs_file);
-
+		mutex_destroy(&fl->map_mutex);
 		fastrpc_file_free(fl);
 		file->private_data = NULL;
 	}

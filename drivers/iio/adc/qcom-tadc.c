@@ -530,6 +530,14 @@ static int tadc_do_conversion(struct tadc_chip *chip, u8 channels, s16 *adc)
 		goto unlock;
 	}
 
+	reinit_completion(&chip->eoc_complete);
+
+	if (get_effective_result(chip->tadc_disable_votable)) {
+		/* leave it back in completed state */
+		complete_all(&chip->eoc_complete);
+		rc = -ENODATA;
+		goto unlock;
+	}
 	if (val[0] != 0) {
 		tadc_write(chip, TADC_EN_CTL_REG(chip), 0);
 		tadc_write(chip, TADC_EN_CTL_REG(chip), 0x80);
@@ -907,6 +915,7 @@ static int tadc_disable_vote_callback(struct votable *votable,
 			pr_err("Couldn't save hw conversions rc=%d\n", rc);
 			return rc;
 		}
+
 		rc = tadc_write(chip, TADC_HWTRIG_CONV_CH_EN_REG(chip), 0x00);
 		if (rc < 0) {
 			pr_err("Couldn't disable hw conversions rc=%d\n", rc);

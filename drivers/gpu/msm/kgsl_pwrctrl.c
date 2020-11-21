@@ -3179,3 +3179,50 @@ unsigned int kgsl_pwr_limits_get_freq(enum kgsl_deviceid id)
 	return freq;
 }
 EXPORT_SYMBOL(kgsl_pwr_limits_get_freq);
+
+#ifdef CONFIG_FIH_CPU_USAGE
+void kgsl_pwr_quick_get_infos(unsigned int *min, unsigned int *max, unsigned *curr, unsigned *therm, unsigned *usage)
+{
+/*
+	struct kgsl_device *device = kgsl_get_device(KGSL_DEVICE_3D0);
+	struct kgsl_pwrctrl *pwr;
+*/
+	static struct kgsl_device *device = NULL;
+	struct kgsl_pwrctrl *pwr;
+	int i;
+
+	if (device == NULL ) {
+		for (i = 0; i < KGSL_DEVICE_MAX; i++) {
+			if (kgsl_driver.devp[i] && kgsl_driver.devp[i]->id == KGSL_DEVICE_3D0) {
+				device = kgsl_driver.devp[i];
+				break;
+			}
+		}
+	}
+
+	if (IS_ERR_OR_NULL(device))
+		return;
+	pwr = &device->pwrctrl;
+//	mutex_lock(&device->mutex);
+	if (min)
+		*min = pwr->pwrlevels[pwr->min_pwrlevel].gpu_freq / 1000000;
+	if (max)
+		*max = pwr->pwrlevels[pwr->max_pwrlevel].gpu_freq / 1000000;
+	if (curr)
+		*curr= pwr->pwrlevels[pwr->active_pwrlevel].gpu_freq / 1000000;
+	if (therm)
+		*therm = pwr->pwrlevels[pwr->thermal_pwrlevel].gpu_freq / 1000000;
+	if (usage) {
+		struct kgsl_clk_stats *stats;
+
+		stats = &pwr->clk_stats;
+		//stats = &device->pwrctrl.clk_stats;
+
+		*usage = 0;
+		if (stats->total_old != 0)
+			*usage = (stats->busy_old * 100) / stats->total_old;
+	}
+//	mutex_unlock(&device->mutex);
+}
+EXPORT_SYMBOL(kgsl_pwr_quick_get_infos);
+#endif
