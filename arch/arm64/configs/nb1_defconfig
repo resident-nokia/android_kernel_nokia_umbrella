@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm64 4.4.194 Kernel Configuration
+# Linux/arm64 4.4.205 Kernel Configuration
 #
 CONFIG_ARM64=y
 CONFIG_64BIT=y
@@ -3204,6 +3204,7 @@ CONFIG_HID_PLANTRONICS=y
 # CONFIG_HID_SAMSUNG is not set
 # CONFIG_HID_SONY is not set
 # CONFIG_HID_SPEEDLINK is not set
+# CONFIG_HID_STEAM is not set
 # CONFIG_HID_STEELSERIES is not set
 # CONFIG_HID_SUNPLUS is not set
 # CONFIG_HID_RMI is not set
@@ -3352,7 +3353,6 @@ CONFIG_QPNP_USB_PDPHY=y
 # CONFIG_USB_EMI26 is not set
 # CONFIG_USB_ADUTUX is not set
 # CONFIG_USB_SEVSEG is not set
-# CONFIG_USB_RIO500 is not set
 # CONFIG_USB_LEGOTOWER is not set
 # CONFIG_USB_LCD is not set
 # CONFIG_USB_LED is not set
