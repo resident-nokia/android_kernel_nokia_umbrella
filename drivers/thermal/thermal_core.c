@@ -65,10 +65,6 @@ static DEFINE_MUTEX(thermal_governor_lock);
 
 static struct thermal_governor *def_governor;
 
-#ifdef CONFIG_FIH_CPU_USAGE
-static	struct thermal_cooling_device *sys_cdev[2] = {NULL, NULL};
-#endif
-
 static struct thermal_governor *__find_governor(const char *name)
 {
 	struct thermal_governor *pos;
@@ -1953,11 +1949,6 @@ __thermal_cooling_device_register(struct device_node *np,
 		kfree(cdev);
 		return ERR_PTR(result);
 	}
-#ifdef CONFIG_FIH_CPU_USAGE
-	if (cdev->id<2) {
-		sys_cdev[cdev->id] = cdev;
-	}
-#endif
 
 	/* Add 'this' new cdev to the global cdev list */
 	mutex_lock(&thermal_list_lock);
@@ -2627,26 +2618,6 @@ static void genetlink_exit(void)
 static inline int genetlink_init(void) { return 0; }
 static inline void genetlink_exit(void) {}
 #endif /* !CONFIG_NET */
-
-#ifdef CONFIG_FIH_CPU_USAGE
-void quick_get_cooling_device_freq(unsigned int *curr)
-{
-	unsigned i;
-	unsigned long state;
-	int ret;
-
-	for (i = 0; i < 2; i++) {
-		curr[i] = 0;
-		if (sys_cdev[i] && sys_cdev[i]->ops) {
-			ret = sys_cdev[i]->ops->get_cur_state(sys_cdev[i], &state);
-			if (!ret) {
-			//	printk("cluster %u cooling device : %ld\n", i, state);
-				curr[i] = (unsigned int)state;	
-			}
-		}
-	}
-}
-#endif
 
 static int __init thermal_register_governors(void)
 {

@@ -54,37 +54,6 @@ menu "Device Drivers for FIH"
            help
              support fih download mode by bset enable
 
-
-        menuconfig FIH_DEBUG
-            bool "FIH DEBUG"
-            default n
-            help
-                Turn on this group to enable FIH's DEBUG configurations menu
-
-        if FIH_DEBUG
-
-            config FIH_RESUME_PERFORMANCE_LOG
-                bool "FIH LOG about resume performance"
-                default n
-                ---help---
-                    Enable resume performance log
-
-            config FIH_DUMP_WAKELOCK
-                bool "FIH DUMP WAKELOCK"
-                depends on PM_SLEEP
-                default n
-                ---help---
-                    Enable to dump wakelock periodically if it active.
-
-            config FIH_CPU_USAGE
-                bool "fih cpu usage information"
-                default n
-                ---help---
-                    Support fih cpu usage information
-
-
-        endif
-
 config FIH_HALL_SENSOR
 	bool "FIH HALL Sensor"
 	default n
