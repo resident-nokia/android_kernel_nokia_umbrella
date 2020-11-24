@@ -198,7 +198,7 @@ enum ieee80211_channel_flags {
  * @dfs_cac_ms: DFS CAC time in milliseconds, this is valid for DFS channels.
  */
 struct ieee80211_channel {
-	enum ieee80211_band band;
+	enum nl80211_band band;
 	u16 center_freq;
 	u16 hw_value;
 	u32 flags;
@@ -355,7 +355,7 @@ struct ieee80211_sta_vht_cap {
 struct ieee80211_supported_band {
 	struct ieee80211_channel *channels;
 	struct ieee80211_rate *bitrates;
-	enum ieee80211_band band;
+	enum nl80211_band band;
 	int n_channels;
 	int n_bitrates;
 	struct ieee80211_sta_ht_cap ht_cap;
@@ -3932,7 +3932,7 @@ static inline void *wdev_priv(struct wireless_dev *wdev)
  * @band: band, necessary due to channel number overlap
  * Return: The corresponding frequency (in MHz), or 0 if the conversion failed.
  */
-int ieee80211_channel_to_frequency(int chan, enum ieee80211_band band);
+int ieee80211_channel_to_frequency(int chan, enum nl80211_band band);
 
 /**
  * ieee80211_frequency_to_channel - convert frequency to channel number
@@ -5940,5 +5940,12 @@ int cfg80211_external_auth_request(struct net_device *netdev,
 void cfg80211_update_owe_info_event(struct net_device *netdev,
 				    struct cfg80211_update_owe_info *owe_info,
 				    gfp_t gfp);
+
+/* Due to our tree having a backport of
+ * 57fbcce37be7c1d2622b56587c10ade00e96afa3, this allows QC to support 4.7+
+ * kernels that use the newer NL80211_BAND_* and older kernels that use the
+ * older IEEE80211_BAND_* enums.
+ */
+#define CFG80211_REMOVE_IEEE80211_BACKPORT 1
 
 #endif /* __NET_CFG80211_H */

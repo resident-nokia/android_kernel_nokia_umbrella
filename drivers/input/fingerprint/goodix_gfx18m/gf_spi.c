@@ -287,8 +287,8 @@ static long gf_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		    !access_ok(VERIFY_READ, (void __user *)arg, _IOC_SIZE(cmd));
 	if (retval)
 		return -EFAULT;
-    
-    if(gf_dev->device_available == 0) 
+
+    if(gf_dev->device_available == 0)
     {
         if((cmd == GF_IOC_POWER_ON) || (cmd == GF_IOC_POWER_OFF))
         {
@@ -356,12 +356,12 @@ static long gf_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
             break;
         }
     }
-    
+
     if(i == ARRAY_SIZE(key_map)) {
         pr_warn("key %d not support yet \n", gf_key.key);
         retval = -EFAULT;
     }
-    
+
 		break;
 	case GF_IOC_CLK_READY:
 #ifdef AP_CONTROL_CLK
@@ -667,7 +667,7 @@ static int gf_probe(struct platform_device *pdev)
 		gf_dev->notifier = goodix_noti_block;
 		fb_register_client(&gf_dev->notifier);
 		gf_reg_key_kernel(gf_dev);
-		
+
         gf_dev->irq = gf_irq_num(gf_dev);
 #if 1
 		ret = request_threaded_irq(gf_dev->irq, NULL, gf_irq,
@@ -731,9 +731,10 @@ static int gf_remove(struct platform_device *pdev)
 	if (gf_dev->irq)
 		free_irq(gf_dev->irq, gf_dev);
 
-	if (gf_dev->input != NULL)
+	if (gf_dev->input != NULL) {
 		input_unregister_device(gf_dev->input);
 		input_free_device(gf_dev->input);
+	}
 
 	/* prevent new opens */
 	mutex_lock(&device_list_lock);
