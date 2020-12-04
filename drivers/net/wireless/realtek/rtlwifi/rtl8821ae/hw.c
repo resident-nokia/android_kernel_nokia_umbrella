@@ -3673,9 +3673,9 @@ static void rtl8821ae_update_hal_rate_mask(struct ieee80211_hw *hw,
 	if (wirelessmode == WIRELESS_MODE_N_5G ||
 	    wirelessmode == WIRELESS_MODE_AC_5G ||
 	    wirelessmode == WIRELESS_MODE_A)
-		ratr_bitmap = sta->supp_rates[NL80211_BAND_5GHZ] << 4;
+		ratr_bitmap = sta->supp_rates[HDD_NL80211_BAND_5GHZ] << 4;
 	else
-		ratr_bitmap = sta->supp_rates[NL80211_BAND_2GHZ];
+		ratr_bitmap = sta->supp_rates[HDD_NL80211_BAND_2GHZ];
 
 	if (mac->opmode == NL80211_IFTYPE_ADHOC)
 		ratr_bitmap = 0xfff;

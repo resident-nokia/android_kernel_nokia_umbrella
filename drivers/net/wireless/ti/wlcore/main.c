@@ -5395,8 +5395,8 @@ static int wl12xx_set_bitrate_mask(struct ieee80211_hw *hw,
 	int i, ret = 0;
 
 	wl1271_debug(DEBUG_MAC80211, "mac80211 set_bitrate_mask 0x%x 0x%x",
-		mask->control[NL80211_BAND_2GHZ].legacy,
-		mask->control[NL80211_BAND_5GHZ].legacy);
+		mask->control[HDD_NL80211_BAND_2GHZ].legacy,
+		mask->control[HDD_NL80211_BAND_5GHZ].legacy);
 
 	mutex_lock(&wl->mutex);
 

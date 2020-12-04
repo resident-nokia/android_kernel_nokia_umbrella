@@ -15013,9 +15013,9 @@ static int wlan_hdd_fill_mac_info(struct sk_buff *skb,
 		if (info[i].mac_id == mac_id) {
 			present = true;
 			if (info[i].channel <= SIR_11B_CHANNEL_END)
-				band |= 1 << NL80211_BAND_2GHZ;
+				band |= 1 << HDD_NL80211_BAND_2GHZ;
 			else if (info[i].channel <= SIR_11A_CHANNEL_END)
-				band |= 1 << NL80211_BAND_5GHZ;
+				band |= 1 << HDD_NL80211_BAND_5GHZ;
 		}
 		i++;
 	}

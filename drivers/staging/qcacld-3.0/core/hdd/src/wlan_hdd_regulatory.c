@@ -1338,8 +1338,8 @@ static void hdd_regulatory_dyn_cbk(struct wlan_objmgr_psoc *psoc,
 
 	hdd_debug("process channel list update from regulatory");
 
-	fill_wiphy_band_channels(wiphy, chan_list, NL80211_BAND_2GHZ);
-	fill_wiphy_band_channels(wiphy, chan_list, NL80211_BAND_5GHZ);
+	fill_wiphy_band_channels(wiphy, chan_list, HDD_NL80211_BAND_2GHZ);
+	fill_wiphy_band_channels(wiphy, chan_list, HDD_NL80211_BAND_5GHZ);
 
 	cc_src = ucfg_reg_get_cc_and_src(hdd_ctx->psoc, alpha2);
 	qdf_mem_copy(hdd_ctx->reg.alpha2, alpha2, REG_ALPHA2_LEN + 1);
@@ -1395,9 +1395,9 @@ int hdd_regulatory_init(struct hdd_context *hdd_ctx, struct wiphy *wiphy)
 		ucfg_reg_get_current_chan_list(hdd_ctx->pdev,
 					       cur_chan_list);
 		fill_wiphy_band_channels(wiphy, cur_chan_list,
-					 NL80211_BAND_2GHZ);
+					 HDD_NL80211_BAND_2GHZ);
 		fill_wiphy_band_channels(wiphy, cur_chan_list,
-					 NL80211_BAND_5GHZ);
+					 HDD_NL80211_BAND_5GHZ);
 
 		cc_src = ucfg_reg_get_cc_and_src(hdd_ctx->psoc, alpha2);
 		qdf_mem_copy(hdd_ctx->reg.alpha2, alpha2, REG_ALPHA2_LEN + 1);

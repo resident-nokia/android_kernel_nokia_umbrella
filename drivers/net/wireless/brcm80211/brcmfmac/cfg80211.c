@@ -3391,9 +3391,9 @@ brcmf_notify_sched_scan_results(struct brcmf_if *ifp,
 
 			channel_req = netinfo->channel;
 			if (channel_req <= CH_MAX_2G_CHANNEL)
-				band = NL80211_BAND_2GHZ;
+				band = HDD_NL80211_BAND_2GHZ;
 			else
-				band = NL80211_BAND_5GHZ;
+				band = HDD_NL80211_BAND_5GHZ;
 			channel[i].center_freq =
 				ieee80211_channel_to_frequency(channel_req,
 							       band);
