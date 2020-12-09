@@ -292,7 +292,8 @@ static const struct nla_policy nl80211_policy[NUM_NL80211_ATTR] = {
 	[NL80211_ATTR_MNTR_FLAGS] = { /* NLA_NESTED can't be empty */ },
 	[NL80211_ATTR_MESH_ID] = { .type = NLA_BINARY,
 				   .len = IEEE80211_MAX_MESH_ID_LEN },
-	[NL80211_ATTR_MPATH_NEXT_HOP] = { .type = NLA_U32 },
+	[NL80211_ATTR_MPATH_NEXT_HOP] = { .type = NLA_BINARY,
+					  .len = ETH_ALEN },
 
 	[NL80211_ATTR_REG_ALPHA2] = { .type = NLA_STRING, .len = 2 },
 	[NL80211_ATTR_REG_RULES] = { .type = NLA_NESTED },
@@ -1307,6 +1308,46 @@ nl80211_send_mgmt_stypes(struct sk_buff *msg,
 	return 0;
 }
 
+static int
+nl80211_put_iftype_akm_suites(struct cfg80211_registered_device *rdev,
+			      struct sk_buff *msg)
+{
+	int i;
+	struct nlattr *nested, *nested_akms;
+	const struct wiphy_iftype_akm_suites *iftype_akms;
+
+	if (!rdev->wiphy.num_iftype_akm_suites ||
+	    !rdev->wiphy.iftype_akm_suites)
+		return 0;
+
+	nested = nla_nest_start(msg, NL80211_ATTR_IFTYPE_AKM_SUITES);
+	if (!nested)
+		return -ENOBUFS;
+
+	for (i = 0; i < rdev->wiphy.num_iftype_akm_suites; i++) {
+		nested_akms = nla_nest_start(msg, i + 1);
+		if (!nested_akms)
+			return -ENOBUFS;
+
+		iftype_akms = &rdev->wiphy.iftype_akm_suites[i];
+
+		if (nl80211_put_iftypes(msg, NL80211_IFTYPE_AKM_ATTR_IFTYPES,
+					iftype_akms->iftypes_mask))
+			return -ENOBUFS;
+
+		if (nla_put(msg, NL80211_IFTYPE_AKM_ATTR_SUITES,
+			    sizeof(u32) * iftype_akms->n_akm_suites,
+			    iftype_akms->akm_suites)) {
+			return -ENOBUFS;
+		}
+		nla_nest_end(msg, nested_akms);
+	}
+
+	nla_nest_end(msg, nested);
+
+	return 0;
+}
+
 struct nl80211_dump_wiphy_state {
 	s64 filter_wiphy;
 	long start;
@@ -1605,6 +1646,7 @@ static int nl80211_send_wiphy(struct cfg80211_registered_device *rdev,
 					NL80211_FEATURE_SUPPORTS_WMM_ADMISSION)
 				CMD(add_tx_ts, ADD_TX_TS);
 			CMD(update_connect_params, UPDATE_CONNECT_PARAMS);
+			CMD(update_ft_ies, UPDATE_FT_IES);
 		}
 		/* add into the if now */
 #undef CMD
@@ -1848,6 +1890,13 @@ static int nl80211_send_wiphy(struct cfg80211_registered_device *rdev,
 			}
 			nla_nest_end(msg, nested);
 		}
+
+		state->split_start++;
+		break;
+	case 14:
+
+		if (nl80211_put_iftype_akm_suites(rdev, msg))
+			goto nla_put_failure;
 
 		/* done */
 		state->split_start = 0;
@@ -2974,7 +3023,7 @@ static void get_key_callback(void *c, struct key_params *params)
 			 params->cipher)))
 		goto nla_put_failure;
 
-	if (nla_put_u8(cookie->msg, NL80211_ATTR_KEY_IDX, cookie->idx))
+	if (nla_put_u8(cookie->msg, NL80211_KEY_IDX, cookie->idx))
 		goto nla_put_failure;
 
 	nla_nest_end(cookie->msg, key);
@@ -3875,8 +3924,10 @@ static int nl80211_start_ap(struct sk_buff *skb, struct genl_info *info)
 		if (err)
 			return err;
 
-		err = validate_beacon_tx_rate(rdev, params.chandef.chan->band,
-					      &params.beacon_rate);
+		err = validate_beacon_tx_rate(
+			     rdev,
+			     (enum nl80211_band)(params.chandef.chan->band),
+			     &params.beacon_rate);
 		if (err)
 			return err;
 	}
@@ -6258,7 +6309,10 @@ static int parse_bss_select(struct nlattr *nla, struct wiphy *wiphy,
 		bss_select->behaviour = NL80211_BSS_SELECT_ATTR_RSSI_ADJUST;
 		bss_select->param.adjust.band = adj_param->band;
 		bss_select->param.adjust.delta = adj_param->delta;
-		if (!is_band_valid(wiphy, bss_select->param.adjust.band))
+		if (!is_band_valid(
+			wiphy,
+			((enum ieee80211_band)(bss_select->param.adjust.band))
+			))
 			return -EINVAL;
 	}
 
@@ -6967,7 +7021,10 @@ nl80211_parse_sched_scan(struct wiphy *wiphy, struct wireless_dev *wdev,
 			attrs[NL80211_ATTR_SCHED_SCAN_RSSI_ADJUST]);
 		request->rssi_adjust.band = rssi_adjust->band;
 		request->rssi_adjust.delta = rssi_adjust->delta;
-		if (!is_band_valid(wiphy, request->rssi_adjust.band)) {
+		if (!is_band_valid(
+			wiphy,
+			(enum ieee80211_band)(request->rssi_adjust.band)
+			)) {
 			err = -EINVAL;
 			goto out_free;
 		}
@@ -9492,8 +9549,10 @@ static int nl80211_join_mesh(struct sk_buff *skb, struct genl_info *info)
 		if (err)
 			return err;
 
-		err = validate_beacon_tx_rate(rdev, setup.chandef.chan->band,
-					      &setup.beacon_rate);
+		err = validate_beacon_tx_rate(
+				rdev,
+				(enum nl80211_band)(setup.chandef.chan->band),
+				&setup.beacon_rate);
 		if (err)
 			return err;
 	}

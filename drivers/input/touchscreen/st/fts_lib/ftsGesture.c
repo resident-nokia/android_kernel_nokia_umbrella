@@ -197,7 +197,7 @@ int disableGesture(u8 *mask, int size) {
 		}
 
 		logError(0, "%s disableGesture DONE! \n", tag);
-		
+
 		res = OK;
 
 	END:
@@ -372,7 +372,7 @@ int enterGestureMode(int reload) {
 		}
 
 		/****** mandatory steps to set the correct gesture mask defined by the user ******/
-		res = disableGesture(NULL, 0);			
+		res = disableGesture(NULL, 0);
 		if (res < OK) {
 			logError(1, "%s enterGestureMode: disableGesture ERROR %08X \n", tag, res);
 			goto END;
@@ -412,8 +412,10 @@ int addCustomGesture(u8 *data, int size, u8 gestureID) {
 	index = gestureID - GESTURE_CUSTOM_OFFSET;
 
 	logError(0, "%s Starting Custom Gesture Adding procedure...\n", tag);
-	if (size != GESTURE_CUSTOM_POINTS || (gestureID != GES_ID_CUST1 && gestureID != GES_ID_CUST2 && gestureID != GES_ID_CUST3 && gestureID != GES_ID_CUST4 && gestureID != GES_ID_CUST5)) {
-		logError(1, "%s addCustomGesture: Invalid size (%d) or Custom GestureID (%02X)! ERROR %08X \n", tag, size, gestureID, ERROR_OP_NOT_ALLOW);
+	if ((size != GESTURE_CUSTOM_POINTS) && (gestureID != GES_ID_CUST1)
+		&& (gestureID != GES_ID_CUST2) && (gestureID != GES_ID_CUST3)
+		&& (gestureID != GES_ID_CUST4) && (gestureID != GES_ID_CUST5)) {
+		logError(1, "%s addCustomGesture: Invalid size (%d) or Custom GestureID (%02X)! ERROR %08X\n", tag, size, gestureID, ERROR_OP_NOT_ALLOW);
 		return ERROR_OP_NOT_ALLOW;
 	}
 
@@ -441,8 +443,10 @@ int removeCustomGesture(u8 gestureID) {
 	index = gestureID - GESTURE_CUSTOM_OFFSET;
 
 	logError(0, "%s Starting Custom Gesture Removing procedure...\n", tag);
-	if (gestureID != GES_ID_CUST1 && gestureID != GES_ID_CUST2 && gestureID != GES_ID_CUST3 && gestureID != GES_ID_CUST4 && gestureID != GES_ID_CUST5) {
-		logError(1, "%s removeCustomGesture: Invalid Custom GestureID (%02X)! ERROR %08X \n", tag, gestureID, ERROR_OP_NOT_ALLOW);
+	if ((gestureID != GES_ID_CUST1) && (gestureID != GES_ID_CUST2)
+		&& (gestureID != GES_ID_CUST3) && (gestureID != GES_ID_CUST4)
+		&& (gestureID != GES_ID_CUST5)) {
+		logError(1, "%s removeCustomGesture: Invalid size (%d) or Custom GestureID (%02X)! ERROR %08X\n", tag, gestureID, ERROR_OP_NOT_ALLOW);
 		return ERROR_OP_NOT_ALLOW;
 	}
 
@@ -458,8 +462,9 @@ int removeCustomGesture(u8 gestureID) {
 		return res;
 	}
 
-	if (readData[2] != gestureID || readData[4] != 0x00) {			//check of gestureID is redundant
-		logError(1, "%s removeCustomGesture: remove event status not OK! ERROR %08X \n", tag, readData[4]);
+	/* check of gestureID is redundant */
+	if ((readData[2] != gestureID) || (readData[4] != 0x00)) {
+		logError(1, "%s removeCustomGesture: remove event status not OK! ERROR %08X\n", tag, readData[4]);
 		return ERROR_GESTURE_REMOVE;
 	}
 
@@ -500,17 +505,17 @@ int readGestureCoords(u8 *event){
     int i = 0;
     u8 rCmd[3] = {FTS_CMD_FRAMEBUFFER_R, 0x00, 0x00 };
     int res;
-   	
+
     unsigned char val[GESTURE_COORDS_REPORT_MAX*4+1];			//the max coordinates to read are GESTURE_COORDS_REPORT_MAX*4(because each coordinate is a short(*2) and we have x and y) + dummy byte
-  	
-		
+
+
 	if(event[0]==EVENTID_GESTURE && event[1] == EVENT_TYPE_GESTURE_DTC2)
 	{
-		
-		
+
+
 		rCmd[1] = event[4];    // Offset address L
-		rCmd[2] = event[3];    // Offset address H 
-		gesture_coords_reported = event[6];	    //number of coords reported L    
+		rCmd[2] = event[3];    // Offset address H
+		gesture_coords_reported = event[6];	    //number of coords reported L
 		gesture_coords_reported = (gesture_coords_reported << 8) | event[5]; //number of coords reported H
 		if(gesture_coords_reported>GESTURE_COORDS_REPORT_MAX){
 			logError(1, "%s %s:  FW reported more than %d points for the gestures! Decreasing to %d \n", tag, __func__, gesture_coords_reported,GESTURE_COORDS_REPORT_MAX);
@@ -519,29 +524,29 @@ int readGestureCoords(u8 *event){
 
 		logError(1,"%s %s: Offset: %02X %02X points = %d\n", tag,__func__, rCmd[1], rCmd[2], gesture_coords_reported);
 		res=fts_readCmd(rCmd, 3, (unsigned char *)val, 1 + (gesture_coords_reported*2));
-		if (res<OK) 
+		if (res<OK)
 		{
 			logError(1, "%s %s: Cannot read the coordinates! ERROR %08X  \n", tag, __func__, res);
 			gesture_coords_reported = ERROR_OP_NOT_ALLOW;
 			return res;
 		}
-	
+
 		//all the points of the gesture are stored in val
 		for(i = 0;i < gesture_coords_reported;i++)
 		{	//ignore first byte data because it is a dummy byte
 			gesture_coordinates_x[i] =  (((u16) val[i*2 + 1 + 1]) & 0x0F) << 8 | (((u16) val[i*2 + 1])& 0xFF);
-			gesture_coordinates_y[i] =  (((u16) val[gesture_coords_reported*2 + i*2 + 1 + 1]) & 0x0F) << 8 | (((u16) val[gesture_coords_reported*2 + i*2 + 1]) & 0xFF);					
+			gesture_coordinates_y[i] =  (((u16) val[gesture_coords_reported*2 + i*2 + 1 + 1]) & 0x0F) << 8 | (((u16) val[gesture_coords_reported*2 + i*2 + 1]) & 0xFF);
 		}
 
-	
+
 		logError(1, "%s %s: Reading Gesture Coordinates DONE!  \n", tag, __func__);
 		return OK;
-	
+
 	}else{
 		logError(1, "%s %s: The event passsed as argument is invalid! ERROR %08X  \n", tag, __func__, ERROR_OP_NOT_ALLOW);
 		return ERROR_OP_NOT_ALLOW;
-	}	
-	
+	}
+
 }
 
 int getGestureCoords(u16 *x, u16 *y){
