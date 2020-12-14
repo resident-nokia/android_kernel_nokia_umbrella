@@ -11215,7 +11215,7 @@ static int nl80211_tdls_channel_switch(struct sk_buff *skb,
 	 * section 10.22.6.2.1. Disallow 5/10Mhz channels as well for now, the
 	 * specification is not defined for them.
 	 */
-	if (chandef.chan->band == IEEE80211_BAND_2GHZ &&
+	if (chandef.chan->band == NL80211_BAND_2GHZ &&
 	    chandef.width != NL80211_CHAN_WIDTH_20_NOHT &&
 	    chandef.width != NL80211_CHAN_WIDTH_20)
 		return -EINVAL;

@@ -591,7 +591,7 @@ static bool cfg80211_bss_type_match(u16 capability,
 	if (bss_type == IEEE80211_BSS_TYPE_ANY)
 		return ret;
 
-	if (band == IEEE80211_BAND_60GHZ) {
+	if (band == NL80211_BAND_60GHZ) {
 		mask = WLAN_CAPABILITY_DMG_TYPE_MASK;
 		switch (bss_type) {
 		case IEEE80211_BSS_TYPE_ESS:
@@ -1075,7 +1075,7 @@ cfg80211_inform_bss_data(struct wiphy *wiphy,
 	if (!res)
 		return NULL;
 
-	if (channel->band == IEEE80211_BAND_60GHZ) {
+	if (channel->band == NL80211_BAND_60GHZ) {
 		bss_type = res->pub.capability & WLAN_CAPABILITY_DMG_TYPE_MASK;
 		if (bss_type == WLAN_CAPABILITY_DMG_TYPE_AP ||
 		    bss_type == WLAN_CAPABILITY_DMG_TYPE_PBSS)
@@ -1143,7 +1143,7 @@ cfg80211_inform_bss_frame_data(struct wiphy *wiphy,
 	else
 		rcu_assign_pointer(tmp.pub.beacon_ies, ies);
 	rcu_assign_pointer(tmp.pub.ies, ies);
-	
+
 	memcpy(tmp.pub.bssid, mgmt->bssid, ETH_ALEN);
 	tmp.pub.channel = channel;
 	tmp.pub.scan_width = data->scan_width;
@@ -1158,7 +1158,7 @@ cfg80211_inform_bss_frame_data(struct wiphy *wiphy,
 	if (!res)
 		return NULL;
 
-	if (channel->band == IEEE80211_BAND_60GHZ) {
+	if (channel->band == NL80211_BAND_60GHZ) {
 		bss_type = res->pub.capability & WLAN_CAPABILITY_DMG_TYPE_MASK;
 		if (bss_type == WLAN_CAPABILITY_DMG_TYPE_AP ||
 		    bss_type == WLAN_CAPABILITY_DMG_TYPE_PBSS)

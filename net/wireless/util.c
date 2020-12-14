@@ -48,7 +48,7 @@ u32 ieee80211_mandatory_rates(struct ieee80211_supported_band *sband,
 	if (WARN_ON(!sband))
 		return 1;
 
-	if (sband->band == IEEE80211_BAND_2GHZ) {
+	if (sband->band == NL80211_BAND_2GHZ) {
 		if (scan_width == NL80211_BSS_CHAN_WIDTH_5 ||
 		    scan_width == NL80211_BSS_CHAN_WIDTH_10)
 			mandatory_flag = IEEE80211_RATE_MANDATORY_G;
@@ -73,7 +73,7 @@ int ieee80211_channel_to_frequency(int chan, enum nl80211_band band)
 	if (chan <= 0)
 		return 0; /* not supported */
 	switch (band) {
-	case IEEE80211_BAND_2GHZ:
+	case NL80211_BAND_2GHZ:
 		if (chan == 14)
 			return 2484;
 		else if (chan < 14)
@@ -156,7 +156,7 @@ static void set_mandatory_flags_band(struct ieee80211_supported_band *sband,
 		}
 		WARN_ON(want);
 		break;
-	case IEEE80211_BAND_2GHZ:
+	case NL80211_BAND_2GHZ:
 		want = 7;
 		for (i = 0; i < sband->n_bitrates; i++) {
 			if (sband->bitrates[i].bitrate == 10) {
@@ -1342,7 +1342,7 @@ bool ieee80211_operating_class_to_band(u8 operating_class,
 	case 82:
 	case 83:
 	case 84:
-		*band = IEEE80211_BAND_2GHZ;
+		*band = NL80211_BAND_2GHZ;
 		return true;
 	case 180:
 		*band = IEEE80211_BAND_60GHZ;
