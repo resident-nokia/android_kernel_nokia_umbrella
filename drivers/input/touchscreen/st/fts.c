@@ -327,15 +327,15 @@ END:
     ret|=fts_enableInterrupt();
 
     snprintf(buff, sizeof (buff), "%02X", 0xAA);
-    strncat(all_strbuff, buff, size);
+    strlcat(all_strbuff, buff, size);
     snprintf(buff, sizeof (buff), "%08X", ret);
-    strncat(all_strbuff, buff, size);
+    strlcat(all_strbuff, buff, size);
     if(ret>=OK)
     {
         for(ret=0; ret< LOCKDOWN_CODE_SIZE; ret++)
         {
             snprintf(buff, sizeof (buff), "%02X", data[ret]);
-            strncat(all_strbuff, buff, size);
+            strlcat(all_strbuff, buff, size);
         }
     }
     else
@@ -343,7 +343,7 @@ END:
         logError(1, "%s Error while reading lockdown info = %08X\n", tag, ret);
     }
     snprintf(buff, sizeof (buff), "%02X", 0xBB);
-    strncat(all_strbuff, buff, size);
+    strlcat(all_strbuff, buff, size);
     return snprintf(buf, TSP_BUF_SIZE, "%s\n", all_strbuff);
 
 
@@ -3967,7 +3967,7 @@ static void fts_suspend_work(struct work_struct *work)
 
     fts_enableInterrupt();
 	logError(0, "%s %s: Enter suspend....-\n", tag, __func__);
-	
+
 }
 
 
@@ -4010,7 +4010,7 @@ static int fts_fb_state_chg_callback(struct notifier_block *nb, unsigned long va
 
             queue_work(info->event_wq, &info->resume_work);
             break;
-         default:           
+         default:
             break;
 
         }
@@ -4297,7 +4297,7 @@ void stm_fts_fih_cmd(void)
     SelfSenseFrame frameSS;
 
     TestToDo todoDefault;
-	
+
 	if(info == NULL)
 		return;
 	else
@@ -4880,11 +4880,11 @@ void fts_fih_tp_rst(void)
 
 		msleep(50);
 
-	    //Resume	
+	    //Resume
 	    logError(0, "%s %s: Resume\n", tag, __func__);
 	    queue_work(g_info->event_wq, &g_info->resume_work);
 		tp_st_count = 0;
-		pr_info("F@TOUCH %s tp_st_count=%ld",__func__,tp_st_count);		
+		pr_info("F@TOUCH %s tp_st_count=%ld",__func__,tp_st_count);
     }
 	else
 	{
@@ -4936,7 +4936,7 @@ static enum hrtimer_restart tpalt_timer_handle(struct hrtimer *hrtimer)
 	{
 		logError(0, "%s %s: F@TOUCH ERROR: g_info is NULL\n", tag, __func__);
 	}
-	
+
     return HRTIMER_RESTART;
 }
 
