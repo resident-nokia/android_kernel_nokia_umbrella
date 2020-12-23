@@ -131,12 +131,12 @@ static ssize_t fih_lcm_write_color_settings(struct file *file, const char __user
     if (copy_from_user(buf, buffer, count))
         return -EFAULT;
 
-	buf[COLORMODE_STRING_SIZE]=0;
-	pr_err("fih_lcm_write_color_settings %s\n",buf);
+    buf[COLORMODE_STRING_SIZE]=0;
+    pr_err("fih_lcm_write_color_settings %s\n",buf);
 
     res = fih_mdss_color_config(simple_strtoul(buf, NULL, 16));
 
-	if (res < 0)
+    if (res < 0)
     {
         kfree(buf);
         return res;
