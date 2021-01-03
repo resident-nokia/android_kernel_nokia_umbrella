@@ -22,6 +22,12 @@ export KBUILD_OUTPUT="$(pwd)/out"
 export KBUILD_BUILD_USER="user"
 export KBUILD_BUILD_HOST="build"
 
+if [ "${USE_CCACHE}" == 1 ] && [ -x "${CCACHE_EXEC}" ];
+then
+    CROSS_COMPILE="${CCACHE_EXEC} ${CROSS_COMPILE}"
+    CROSS_COMPILE_ARM32="${CCACHE_EXEC} ${CROSS_COMPILE_ARM32}"
+fi
+
 echo
 echo "Cleanup output dir"
 echo
