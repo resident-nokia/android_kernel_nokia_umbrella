@@ -1287,7 +1287,7 @@ enum hdd_dot11_mode {
 #define CFG_EARLY_STOP_SCAN_ENABLE           "gEnableEarlyStopScan"
 #define CFG_EARLY_STOP_SCAN_ENABLE_MIN       (0)
 #define CFG_EARLY_STOP_SCAN_ENABLE_MAX       (1)
-#define CFG_EARLY_STOP_SCAN_ENABLE_DEFAULT   (0)
+#define CFG_EARLY_STOP_SCAN_ENABLE_DEFAULT   (1)
 
 /*
  * <ini>
@@ -1592,7 +1592,7 @@ enum hdd_dot11_mode {
  * adaptive_dwell_mode_enabled - Enable adaptive dwell mode
  * @Min: 0
  * @Max: 1
- * @Default: 1
+ * @Default: 0
  *
  * This parameter will globally disable/enable the adaptive dwell config.
  * Following parameters will set different values of attributes for dwell
@@ -1612,14 +1612,14 @@ enum hdd_dot11_mode {
 #define CFG_ADAPTIVE_DWELL_MODE_ENABLED_NAME      "adaptive_dwell_mode_enabled"
 #define CFG_ADAPTIVE_DWELL_MODE_ENABLED_MIN       (0)
 #define CFG_ADAPTIVE_DWELL_MODE_ENABLED_MAX       (1)
-#define CFG_ADAPTIVE_DWELL_MODE_ENABLED_DEFAULT   (1)
+#define CFG_ADAPTIVE_DWELL_MODE_ENABLED_DEFAULT   (0)
 
 /*
  * <ini>
  * global_adapt_dwelltime_mode - Set default adaptive mode
  * @Min: 0
  * @Max: 4
- * @Default: 0
+ * @Default: 1
  *
  * This parameter will set default adaptive mode, will be used if any of the
  * scan dwell mode is set to default.
@@ -1636,7 +1636,7 @@ enum hdd_dot11_mode {
 #define CFG_GLOBAL_ADAPTIVE_DWELL_MODE_NAME       "global_adapt_dwelltime_mode"
 #define CFG_GLOBAL_ADAPTIVE_DWELL_MODE_MIN        (0)
 #define CFG_GLOBAL_ADAPTIVE_DWELL_MODE_MAX        (4)
-#define CFG_GLOBAL_ADAPTIVE_DWELL_MODE_DEFAULT    (0)
+#define CFG_GLOBAL_ADAPTIVE_DWELL_MODE_DEFAULT    (1)
 
 /*
  * <ini>
@@ -1897,8 +1897,8 @@ enum hdd_dot11_mode {
  * <ini>
  * gDroppedPktDisconnectTh - Sets dropped packet threshold in firmware
  * @Min: 0
- * @Max: 512
- * @Default: 512
+ * @Max: 65535
+ * @Default: 1024
  *
  * This INI is the packet drop threshold will trigger disconnect from remote
  * peer.
@@ -1921,7 +1921,7 @@ enum hdd_dot11_mode {
  * gForce1x1Exception - force 1x1 when connecting to certain peer
  * @Min: 0
  * @Max: 2
- * @Default: 2
+ * @Default: 1
  *
  * This INI when enabled will force 1x1 connection with certain peer.
  * The implementation for this ini would be as follows:-
@@ -3679,7 +3679,7 @@ enum hdd_dot11_mode {
  * gMaxLIModulatedDTIM - Set MaxLIModulate Dtim
  * @Min: 1
  * @Max: 10
- * @Default: 10
+ * @Default: 6
  *
  * This ini is used to set default MaxLIModulatedDTIM
  *
@@ -3695,7 +3695,7 @@ enum hdd_dot11_mode {
 #define CFG_MAX_LI_MODULATED_DTIM_NAME         "gMaxLIModulatedDTIM"
 #define CFG_MAX_LI_MODULATED_DTIM_MIN          (1)
 #define CFG_MAX_LI_MODULATED_DTIM_MAX          (10)
-#define CFG_MAX_LI_MODULATED_DTIM_DEFAULT      (10)
+#define CFG_MAX_LI_MODULATED_DTIM_DEFAULT      (6)
 
 /*
  * <ini>
@@ -4929,12 +4929,12 @@ enum station_keepalive_method {
 #define CFG_ROAM_BMISS_FIRST_BCNT_NAME                  "gRoamBmissFirstBcnt"
 #define CFG_ROAM_BMISS_FIRST_BCNT_MIN                   (5)
 #define CFG_ROAM_BMISS_FIRST_BCNT_MAX                   (100)
-#define CFG_ROAM_BMISS_FIRST_BCNT_DEFAULT               (10)
+#define CFG_ROAM_BMISS_FIRST_BCNT_DEFAULT               (15)
 
 #define CFG_ROAM_BMISS_FINAL_BCNT_NAME                  "gRoamBmissFinalBcnt"
 #define CFG_ROAM_BMISS_FINAL_BCNT_MIN                   (5)
 #define CFG_ROAM_BMISS_FINAL_BCNT_MAX                   (100)
-#define CFG_ROAM_BMISS_FINAL_BCNT_DEFAULT               (20)
+#define CFG_ROAM_BMISS_FINAL_BCNT_DEFAULT               (25)
 
 #define CFG_ROAM_BEACON_RSSI_WEIGHT_NAME                "gRoamBeaconRssiWeight"
 #define CFG_ROAM_BEACON_RSSI_WEIGHT_MIN                 (0)
@@ -4989,7 +4989,7 @@ enum station_keepalive_method {
  * gHwFilterMode - configure hardware filter for DTIM mode
  * @Min: 0
  * @Max: 3
- * @Default: 1
+ * @Default: 3
  *
  * The hardware filter is only effective in DTIM mode. Use this configuration
  * to blanket drop broadcast/multicast packets at the hardware level, without
@@ -5015,7 +5015,7 @@ enum station_keepalive_method {
 #define CFG_HW_FILTER_MODE_BITMAP_NAME	"gHwFilterMode"
 #define CFG_HW_FILTER_MODE_BITMAP_MIN		(0)
 #define CFG_HW_FILTER_MODE_BITMAP_MAX		(3)
-#define CFG_HW_FILTER_MODE_BITMAP_DEFAULT	(1)
+#define CFG_HW_FILTER_MODE_BITMAP_DEFAULT	(3)
 
 /*
  * <ini>
@@ -5581,7 +5581,7 @@ enum hdd_link_speed_rpt_type {
 #define CFG_REPORT_MAX_LINK_SPEED                  "gReportMaxLinkSpeed"
 #define CFG_REPORT_MAX_LINK_SPEED_MIN              (eHDD_LINK_SPEED_REPORT_ACTUAL)
 #define CFG_REPORT_MAX_LINK_SPEED_MAX              (eHDD_LINK_SPEED_REPORT_MAX_SCALED)
-#define CFG_REPORT_MAX_LINK_SPEED_DEFAULT          (eHDD_LINK_SPEED_REPORT_ACTUAL)
+#define CFG_REPORT_MAX_LINK_SPEED_DEFAULT          (eHDD_LINK_SPEED_REPORT_MAX_SCALED)
 
 /*
  * <ini>
@@ -6404,7 +6404,7 @@ enum hdd_link_speed_rpt_type {
 #define CFG_ENABLE_MODULATED_DTIM_NAME       "gEnableModulatedDTIM"
 #define CFG_ENABLE_MODULATED_DTIM_MIN        (0)
 #define CFG_ENABLE_MODULATED_DTIM_MAX        (5)
-#define CFG_ENABLE_MODULATED_DTIM_DEFAULT    (0)
+#define CFG_ENABLE_MODULATED_DTIM_DEFAULT    (3)
 
 /*
  * <ini>
@@ -10296,7 +10296,7 @@ enum dot11p_mode {
 #define CFG_DUAL_MAC_FEATURE_DISABLE              "gDualMacFeatureDisable"
 #define CFG_DUAL_MAC_FEATURE_DISABLE_MIN          (0)
 #define CFG_DUAL_MAC_FEATURE_DISABLE_MAX          (6)
-#define CFG_DUAL_MAC_FEATURE_DISABLE_DEFAULT      (0)
+#define CFG_DUAL_MAC_FEATURE_DISABLE_DEFAULT      (1)
 
 /*
  * <ini>
@@ -11419,7 +11419,7 @@ enum dot11p_mode {
 #define CFG_INDOOR_CHANNEL_SUPPORT_NAME     "gindoor_channel_support"
 #define CFG_INDOOR_CHANNEL_SUPPORT_MIN      (0)
 #define CFG_INDOOR_CHANNEL_SUPPORT_MAX      (1)
-#define CFG_INDOOR_CHANNEL_SUPPORT_DEFAULT  (0)
+#define CFG_INDOOR_CHANNEL_SUPPORT_DEFAULT  (1)
 
 /*
  * <ini>
@@ -12061,7 +12061,7 @@ enum hdd_wext_control {
  * gEnablePowerSaveOffload - Enable Power Save Offload
  * @Min: 0
  * @Max: 5
- * @Default: 0
+ * @Default: 1
  *
  * This ini is used to set Power Save Offload configuration:
  * Current values of gEnablePowerSaveOffload:
@@ -12083,7 +12083,7 @@ enum hdd_wext_control {
 #define CFG_POWERSAVE_OFFLOAD_NAME                "gEnablePowerSaveOffload"
 #define CFG_POWERSAVE_OFFLOAD_MIN                 (0)
 #define CFG_POWERSAVE_OFFLOAD_MAX                 (PS_DUTY_CYCLING_QPOWER)
-#define CFG_POWERSAVE_OFFLOAD_DEFAULT             (CFG_POWERSAVE_OFFLOAD_MIN)
+#define CFG_POWERSAVE_OFFLOAD_DEFAULT             (PS_LEGACY_NODEEPSLEEP)
 
 /*
  * <ini>
@@ -12384,7 +12384,7 @@ enum hdd_wext_control {
 #define CFG_PER_ROAM_ENABLE_NAME           "gper_roam_enabled"
 #define CFG_PER_ROAM_ENABLE_MIN            (0)
 #define CFG_PER_ROAM_ENABLE_MAX            (3)
-#define CFG_PER_ROAM_ENABLE_DEFAULT        (3)
+#define CFG_PER_ROAM_ENABLE_DEFAULT        (0)
 
 /*
  * <ini>
@@ -13436,7 +13436,7 @@ enum hdd_external_acs_policy {
  * gItoRepeatCount - sets ito repeated count
  * @Min: 0
  * @Max: 5
- * @Default: 0
+ * @Default: 5
  *
  * This ini sets the ito count in FW
  *
@@ -13447,7 +13447,7 @@ enum hdd_external_acs_policy {
 #define CFG_ITO_REPEAT_COUNT_NAME "gItoRepeatCount"
 #define CFG_ITO_REPEAT_COUNT_MIN        (0)
 #define CFG_ITO_REPEAT_COUNT_MAX        (5)
-#define CFG_ITO_REPEAT_COUNT_DEFAULT    (0)
+#define CFG_ITO_REPEAT_COUNT_DEFAULT    (5)
 
 /*
  * <ini>
@@ -14832,7 +14832,7 @@ enum hdd_external_acs_policy {
  * suspend mode
  * @Min: 0
  * @Max: 63
- * @Default: 0
+ * @Default: 3
  * Below is the Detailed bit map of the Filters
  * bit-0 : IPv6 multicast
  * bit-1 : IPv4 multicast
@@ -14860,7 +14860,7 @@ enum hdd_external_acs_policy {
  * </ini>
  */
 #define CFG_ENABLE_PACKET_FILTERS_NAME     "g_enable_packet_filter_bitmap"
-#define CFG_ENABLE_PACKET_FILTERS_DEFAULT  (0)
+#define CFG_ENABLE_PACKET_FILTERS_DEFAULT  (3)
 #define CFG_ENABLE_PACKET_FILTERS_MIN      (0)
 #define CFG_ENABLE_PACKET_FILTERS_MAX      (63)
 
