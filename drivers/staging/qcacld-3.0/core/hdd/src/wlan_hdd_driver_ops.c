@@ -505,11 +505,7 @@ static int wlan_hdd_probe(struct device *dev, void *bdev,
  */
 static void wlan_hdd_remove(struct device *dev)
 {
-	struct hdd_context *hdd_ctx = cds_get_context(QDF_MODULE_ID_HDD);
-
-	QDF_BUG(hdd_ctx);
-	if (!hdd_ctx)
-		return;
+	struct hdd_context *hdd_ctx;
 
 	pr_info("%s: Removing driver v%s\n", WLAN_MODULE_NAME,
 		QWLAN_VERSIONSTR);
@@ -524,6 +520,12 @@ static void wlan_hdd_remove(struct device *dev)
 		hdd_warn("Debugfs threads are still active attempting driver unload anyway");
 
 	mutex_lock(&hdd_init_deinit_lock);
+	hdd_ctx = cds_get_context(QDF_MODULE_ID_HDD);
+	if (!hdd_ctx) {
+		mutex_unlock(&hdd_init_deinit_lock);
+		return;
+	}
+
 	hdd_start_driver_ops_timer(eHDD_DRV_OP_REMOVE);
 	if (QDF_IS_EPPING_ENABLED(cds_get_conparam())) {
 		epping_disable();
@@ -1634,6 +1636,7 @@ static void wlan_hdd_pld_uevent(struct device *dev,
 	wlan_hdd_set_the_pld_uevent(uevent);
 
 	hdd_psoc_idle_timer_stop(hdd_ctx);
+
 	mutex_lock(&hdd_init_deinit_lock);
 	wlan_hdd_handle_the_pld_uevent(uevent);
 	mutex_unlock(&hdd_init_deinit_lock);

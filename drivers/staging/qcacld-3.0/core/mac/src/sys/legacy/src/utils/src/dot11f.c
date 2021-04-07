@@ -4297,6 +4297,7 @@ uint32_t dot11f_unpack_ie_ese_version(tpAniSirGlobal pCtx,
 
 #define SigIeESEVersion (0x0035)
 
+
 uint32_t dot11f_unpack_ie_ext_cap(tpAniSirGlobal pCtx,
 				 uint8_t *pBuf,
 				 uint8_t ielen,
