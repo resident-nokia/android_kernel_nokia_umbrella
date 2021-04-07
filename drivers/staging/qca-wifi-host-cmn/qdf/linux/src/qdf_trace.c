@@ -1487,6 +1487,7 @@ uint8_t qdf_get_rate_limit_by_type(uint8_t type)
 	}
 }
 
+#ifdef WLAN_DEBUG
 /**
  * qdf_get_pkt_type_string() - Get the string based on pkt type
  * @type: packet type
@@ -1570,6 +1571,7 @@ uint8_t *qdf_get_pkt_status_string(uint8_t status)
 		return "unknown";
 	}
 }
+#endif /* WLAN_DEBUG */
 
 /**
  * qdf_dp_log_proto_pkt_info() - Send diag log with pkt info
