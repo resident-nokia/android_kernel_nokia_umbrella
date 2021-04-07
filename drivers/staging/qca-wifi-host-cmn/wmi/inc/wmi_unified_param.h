@@ -6186,6 +6186,7 @@ typedef enum {
 	wmi_roam_scan_chan_list_to_host_support,
 	wmi_service_host_scan_stop_vdev_all,
 	wmi_service_suiteb_roam_support,
+	wmi_service_ll_stats_per_chan_rx_tx_time,
 	wmi_services_max,
 } wmi_conv_service_ids;
 #define WMI_SERVICE_UNAVAILABLE 0xFFFF
@@ -8307,6 +8308,7 @@ struct wmi_mawc_roam_params {
 	uint8_t rssi_stationary_high_adjust;
 	uint8_t rssi_stationary_low_adjust;
 };
+
 /**
  * struct wmi_btm_config - BSS Transition Management offload params
  * @vdev_id: VDEV on which the parameters should be applied
