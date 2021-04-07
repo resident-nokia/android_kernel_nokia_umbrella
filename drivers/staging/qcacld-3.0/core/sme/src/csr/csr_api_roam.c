@@ -16731,57 +16731,6 @@ csr_update_sae_single_pmk_ap_cap(struct csr_roam_session *session,
 #endif
 
 /**
- * csr_get_adaptive_11r_enabled() - Function to check if adaptive 11r
- * ini is enabled or disabled
- * @mac: pointer to mac context
- *
- * Return: true if adaptive 11r is enabled
- */
-static bool
-csr_get_adaptive_11r_enabled(tpAniSirGlobal mac)
-{
-	return mac->roam.configParam.enable_adaptive_11r;
-}
-#else
-static inline bool
-csr_get_adaptive_11r_enabled(tpAniSirGlobal mac)
-{
-	return false;
-}
-#endif
-
-#if defined(WLAN_SAE_SINGLE_PMK) && defined(WLAN_FEATURE_ROAM_OFFLOAD)
-/**
- * csr_update_sae_single_pmk_ap_cap() - Function to update sae single pmk ap ie
- * @session: scr session
- * @akm: AKM type
- * @config_param: csr config
- * @bss_description: bss description
- *
- * Return: true if sae single pmk feature is enabled
- */
-static void
-csr_update_sae_single_pmk_ap_cap(struct csr_roam_session *session,
-				 eCsrAuthType akm,
-				 struct csr_config *config_param,
-				 tSirBssDescription *bss_description)
-{
-	if (akm == eCSR_AUTH_TYPE_SAE &&
-	    config_param->sae_single_pmk_feature_enabled)
-		session->single_pmk_info.sae_single_pmk_ap =
-				bss_description->sae_single_pmk_ap;
-}
-#else
-static inline void
-csr_update_sae_single_pmk_ap_cap(struct csr_roam_session *session,
-				 eCsrAuthType akm,
-				 struct csr_config *config_param,
-				 tSirBssDescription *bss_description)
-{
-}
-#endif
-
-/**
  * The communication between HDD and LIM is thru mailbox (MB).
  * Both sides will access the data structure "tSirSmeJoinReq".
  * The rule is, while the components of "tSirSmeJoinReq" can be accessed in the

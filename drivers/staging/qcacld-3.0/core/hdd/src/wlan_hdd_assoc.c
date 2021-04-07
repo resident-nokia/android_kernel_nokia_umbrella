@@ -3197,7 +3197,6 @@ hdd_association_completion_handler(struct hdd_adapter *adapter,
 						WLAN_CONTROL_PATH);
 
 			}
-			qdf_mem_free(rspRsnIe);
 		} else {
 			/*
 			 * wpa supplicant expecting WPA/RSN IE in connect result

@@ -181,26 +181,6 @@ static unsigned int dev_num = 1;
 static struct cdev wlan_hdd_state_cdev;
 static struct class *class;
 static dev_t device;
-#ifndef MODULE
-static struct gwlan_loader *wlan_loader;
-static ssize_t wlan_boot_cb(struct kobject *kobj,
-			    struct kobj_attribute *attr,
-			    const char *buf, size_t count);
-struct gwlan_loader {
-	bool loaded_state;
-	struct kobject *boot_wlan_obj;
-	struct attribute_group *attr_group;
-};
-
-static struct kobj_attribute wlan_boot_attribute =
-	__ATTR(boot_wlan, 0220, NULL, wlan_boot_cb);
-
-static struct attribute *attrs[] = {
-	&wlan_boot_attribute.attr,
-	NULL,
-};
-#define MODULE_INITIALIZED 1
-#endif
 
 #define HDD_OPS_INACTIVITY_TIMEOUT (120000)
 #define MAX_OPS_NAME_STRING_SIZE 20
@@ -9527,30 +9507,16 @@ wlan_hdd_display_adapter_netif_queue_history(struct hdd_adapter *adapter)
  *
  * Return: none
  */
-static void
-wlan_hdd_display_adapter_netif_queue_stats(struct hdd_adapter *adapter)
+void
+wlan_hdd_display_netif_queue_history(struct hdd_context *hdd_ctx,
+				     enum qdf_stats_verbosity_level verb_lvl)
 {
 	struct hdd_adapter *adapter = NULL;
 
-	hdd_debug("Netif queue operation statistics:");
-	hdd_debug("Session_id %d device mode %d",
-		  adapter->session_id, adapter->device_mode);
-	hdd_debug("Current pause_map value %x", adapter->pause_map);
-	curr_time = qdf_system_ticks();
-	total = curr_time - adapter->start_time;
-	delta = curr_time - adapter->last_time;
-	if (adapter->pause_map) {
-		pause = adapter->total_pause_time + delta;
-		unpause = adapter->total_unpause_time;
-	} else {
-		unpause = adapter->total_unpause_time + delta;
-		pause = adapter->total_pause_time;
+	if (verb_lvl == QDF_STATS_VERBOSITY_LEVEL_LOW) {
+		hdd_display_netif_queue_history_compact(hdd_ctx);
+		return;
 	}
-	hdd_debug("Total: %ums Pause: %ums Unpause: %ums",
-		  qdf_system_ticks_to_msecs(total),
-		  qdf_system_ticks_to_msecs(pause),
-		  qdf_system_ticks_to_msecs(unpause));
-	hdd_debug("reason_type: pause_cnt: unpause_cnt: pause_time");
 
 	hdd_for_each_adapter_dev_held(hdd_ctx, adapter) {
 		wlan_hdd_display_adapter_netif_queue_stats(adapter);
